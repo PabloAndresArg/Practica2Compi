@@ -1,0 +1,166 @@
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg navbar-light bg-light alert alert-dark col-12" role="alert" >
+    <div class="container ">
+
+        <a class="navbar-brand"  routerLink="/menuAux" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"> <i class="fas fa-code"></i> COMPI 1 </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+              <button class = "nav-link btn " (click) = "crear_nueva_ventana()">
+                <p>NUEVO <i class ="fas fa-plus-circle"></i></p>
+              </button>
+              
+            </li>
+
+            <li class="nav-item">
+              <input id="fileInput"  type="file" size="50" onchange="processFiles(this.files)" class = "nav-link btn  ">
+              
+            </li>
+                           
+            <li class="nav-item">
+              <button class = "nav-link btn  ">
+                <p>GUARDAR <i class="fa fa-clone" aria-hidden="true"></i>    </p>
+              </button>
+            </li>
+
+            <li class="nav-item">
+             
+              <button class = "nav-link btn  ">
+                <p> LEXICO <i class="fa fa-inbox" aria-hidden="true"></i>   </p>
+              </button>
+              
+            </li>
+
+            <li class="nav-item">
+              <button class = "nav-link btn  ">
+                <p> SINTACTICO <i class="fa fa-inbox" aria-hidden="true"></i>   </p>
+              </button>
+              
+            </li>
+          </ul>
+        </div>
+    </div>
+  </nav>
+
+
+  <!--                 FORMA VISUAL            -->
+  
+
+  
+
+
+  
+  
+  
+<div class = "container"> 
+  <div class = "row">
+    <div id="carouselExampleControls" class="carousel slide  col-6" data-ride="carousel" data-interval="false">
+    
+      <div class="carousel-inner">
+        <div class="carousel-item active ">
+          <textarea id = "abrir" [(ngModel)] = "entrada.cadena" class="d-block justify-content-center">
+            primer texto
+          </textarea>   
+  
+          <button class = "btn btn-primary col-11" (click) = "analizar()">
+            <p>ANALIZAR <i class="fa fa-check-square" aria-hidden="true"></i></p>
+          </button>
+        </div>
+  
+  
+     <!-- el modelo teine que ser de tipo entrada-->
+        <div class="carousel-item" *ngFor='let obj of listaTXT' > 
+          <textarea [(ngModel)] = "obj.cadena" class="d-block  justify-content-center">
+            {{entrada}}
+          </textarea>   
+         
+          <button class = "btn btn-primary col-11" (click) = "analizar2(obj.cadena)">
+            <p>ANALIZAR <i class="fa fa-check-square" aria-hidden="true" ></i></p>
+          </button>
+        </div>
+  
+  
+      </div>
+  
+      <a class="carousel-control-prev " href="#carouselExampleControls" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon bg-black" ></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+
+    <!--ROW-->
+    <div class = "col-2"></div>
+    <textarea id = "traductor" ng-model="myTextarea" class="d-block  justify-content-center ">
+    </textarea>  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="posCarusel" class="carousel slide  col-6" data-ride="carousel" data-interval="false">
+    
+      <div class="carousel-inner">
+        <div class="carousel-item active ">
+          <textarea ng-model="myTextarea" class="d-block justify-content-center" id="H_tml">
+           MUESTRA HTML
+          </textarea>   
+        </div>
+        <div class="carousel-item">
+          <textarea ng-model="myTextarea" class="d-block justify-content-center" id="J_son">
+           MUESTRA JSON 
+          </textarea>   
+        </div>
+      </div>
+  
+      <a class="carousel-control-prev " href="#posCarusel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon bg-black" ></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#posCarusel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--TERMINA LAS ROW -->
+  </div>
+</div>

@@ -1,0 +1,70 @@
+ <span>{{ title }}</span>        // VARIABLES EN HTML que vienen del .ts
+ // ng serve -o   abre el navegador
+
+// ng generate component  nombre , para generar componentes 
+// siempre se agrega al router con su respectiva ruta 
+
+ <a class="card" target="_blank" rel="noopener">
+  <span>boton</span>
+     <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>    
+    </a>
+    <a class="card" target="_blank" rel="noopener">
+      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+      <span>CLI Documentation</span>
+      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+    </a>
+  </div>            // PONE BOTONES COMO MOVIBLES 
+
+  
+  <div class="card card-small" (click)="selection.value = 'pwa'" tabindex="0">
+        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+
+      <span>Add PWA Support</span>
+    </div>
+
+// ROUTER LINK 
+<a class="nav-link" routerLink="/crarForo" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><i class ="fas fa-plus-circle" ></i> Nuevo  </a>
+// BOTONES CON FUNCIONES 
+
+ <button class = "btn btn-danger " (click)="eliminar(curso.codigoCurso)">
+    <i class ="far fa-trash-alt"></i>
+  </button>
+
+
+// UN CICLO CON *ngFor  y como ocupar cierta cantidad de columnas 
+<div class="col-md-4"  *ngFor='let curso of ListaCursos'  ><br>
+    <div class="card-header  bg-dark text-center text-white d-flex justify-content-between aling-items-center" ng-dark>
+      Codigo del Curso: {{curso.codigoCurso}}
+  <button class = "btn btn-danger " (click)="eliminar(curso.codigoCurso)">
+    <i class ="far fa-trash-alt"></i>
+  </button>
+    </div>
+     <div class = "card-body bg-light">
+        <li>nombre: {{curso.nombre}} </li>
+        <li>descripcion: {{curso.descripcion}} </li>
+        <a [routerLink]="['/editCurso/',curso.codigoCurso]"  class = "btn btn-info btn-block"> Editar Curso</a>
+    </div>
+</div>
+
+
+
+// vectores 
+  ListaCursos: any = [];
+   this.ListaCursos.push( new Objeto() );
+// OBJETOS 
+
+
+Export class Mascota{
+private nombre:string; 
+constructor(nom:string){
+this.nombre = nom;
+}
+getNombre():string{
+return this.nombre;
+}
+}// exportar probar ng g class nombre 
+// declaracion de objetos 
+let perro = new Mascota ("canelo"); 
+console.log(perro.getNombre());
+
+// siempre export para hacer un import donde yo quiera y {nombre clase }

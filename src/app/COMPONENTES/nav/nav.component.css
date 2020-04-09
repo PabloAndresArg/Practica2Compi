@@ -1,0 +1,39 @@
+
+textarea {
+    font-family: Courier, sans-serif;
+    height: 600px;
+    width: 500px;
+    text-align : left;
+    FONT-SIZE: 12px;
+    FONT-FAMILY: Arial;
+    color:darkblue;
+ }
+
+ #traductor{
+    left:910px;
+    right: 400px;
+    position:absolute;
+    height: 275px;
+    width: 470px;
+ }
+ #J_son{
+    height: 357px;
+    width: 600px;
+ }
+ #H_tml{
+    height: 357px;
+    width: 600px; 
+ }
+ .prueba{
+    background-color: chartreuse;
+    color:aquamarine;
+ }
+
+ #posCarusel{
+    position:absolute;
+    left:900px;
+    right: 400px;
+   top:400px;
+   height: 200px;
+   width: 490px; 
+ }

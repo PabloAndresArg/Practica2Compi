@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "CompiPr2"
+    }
+  },
+  "defaultProject": "CompiPr2",
+  "cli": {
+    "analytics": "5ba1ed13-b88c-4f1d-8553-dc01b7d92817"
+  }
 }
