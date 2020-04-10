@@ -1,3 +1,7 @@
+ // para que funcione el proyecto a la hora de descargar se debe de ejecutar " npm install " que descarga todas las dependencias 
+ 
+ 
+ 
  <span>{{ title }}</span>        // VARIABLES EN HTML que vienen del .ts
  // ng serve -o   abre el navegador
 

@@ -57,7 +57,7 @@ export enum Tipo {
     P_res_return,
     sb_and,
     sb_or,
-    sb_diferente
+    sb_negacion
 }
 export class Token{ // si falla implementar el '?' 
   public static CONTADORTOKEN : number = 1; // cada vez que le de analizar regresa a 0 
@@ -223,7 +223,7 @@ export class Token{ // si falla implementar el '?'
           return "AND LOGICO ";
       case Tipo.sb_or:
           return "OR LOGICO ";
-      case Tipo.sb_diferente:
+      case Tipo.sb_negacion:
           return "NEGACION LOGICA";
 
       default:
