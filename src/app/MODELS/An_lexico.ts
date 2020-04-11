@@ -51,7 +51,9 @@ export class An_lexico{
                  }
                 else if (act =="]")  { this.aux_lexico += act; this.addToken(Tipo.corchete_derecho); }
                 else if (act =="!")  { this.aux_lexico += act; this.estado = 14; }
-                else if (act =="\'"){ this.aux_lexico += act; this.estado = 15; } // VERIFICAR SI FUNCIONA 
+                else if (act =="\'"){ this.aux_lexico += act; this.estado = 16; } // VERIFICAR SI FUNCIONA 
+                else if (act =="|"){ this.aux_lexico += act; this.estado = 4; }
+                else if (act =="&"){ this.aux_lexico += act; this.estado = 15; } 
                 else if (act ==","){ this.aux_lexico += act; this.addToken(Tipo.coma); }
                 else if (act ==".") { this.aux_lexico += act; this.addToken(Tipo.punto); }
                 else if (this.esDigito(act)) //NUMEROS Y DECIMALES
@@ -77,7 +79,7 @@ export class An_lexico{
                     if (this.esDigito(act))
                     {
                         this.aux_lexico += act;
-                        this.estado = 1;
+                       
                     } else if (act == "."){
                         this.aux_lexico += act;
                         this.estado = 2;
@@ -90,35 +92,38 @@ export class An_lexico{
                     }
                 break;// FIN DEL CASO 1 -- DIGITOS
                 case 2:
-                        if (this.esDigito(act))
-                        {    this.aux_lexico += act;   this.estado = 3;
-                        }
-                        else if (act=="\n")
-                        {   
-                            this.addError(this.aux_lexico);    Estatico.FILAS++;    Estatico.COLUMNAS = 0;
-                        }
-                        else{   this.aux_lexico += act;    this.addError(this.aux_lexico);  }
+                    if (this.esDigito(act)) // ACEPTA CASOS DECIMALES 
+                    {
+                        this.aux_lexico += act;
+                       
+                    }
+                    else
+                    {
+                        Estatico.COLUMNAS--;
+                        this.addToken(Tipo.decimales);
+                        i--;
+                    }
                 break; // FIN CASO 2    
                 case 3:
-                        if (this.esDigito(act))
-                        {
-                            this.aux_lexico += act;
-                            this.estado = 3;
-                        } else if (act == "f") {  // REVISAR O IMPLEMENTAR  ACEPTAR NUM DECIMAL SEGUIDO DE ID 
-                            this.addToken(Tipo.decimales);
-                        } 
-                        else if (act=="\n")
-                        {   
-                            this.addError(this.aux_lexico);    Estatico.FILAS++;    Estatico.COLUMNAS = 0;
-                        }
-                        else
-                        {
-                            this.aux_lexico += act;
-                            this.addError(this.aux_lexico);
-                        }
+                      
+
 
                 break; // CASO DE LO DECIMALES
-                case 4:
+                case 4: // caso OR LOGICO 
+                if (act == "|") { 
+                    this.aux_lexico += act; 
+                    this.addToken(Tipo.sb_or);
+                } 
+                else if (act=="\n")
+                {   
+                    this.addError(this.aux_lexico);    Estatico.FILAS++;    Estatico.COLUMNAS = 0;
+                }
+                else
+                {
+                    this.aux_lexico += act;
+                    this.addError(this.aux_lexico);
+                }        
+
                 break; // DISPONIBLE PARA USARSE----------------------
                 case 5:// INCREMENTO 
                         if (act == "+")
@@ -148,7 +153,7 @@ export class An_lexico{
                         { Estatico.COLUMNAS--; this.addToken(Tipo.sb_division); i--; }
                         break; // decision de comentarios 
                 case 9:
-                        if (act == "\n")
+                        if (act != "\n")
                         {
                             this.aux_lexico += act;
                         }
@@ -211,25 +216,42 @@ export class An_lexico{
                 { Estatico.COLUMNAS--;this.addToken(Tipo.sb_negacion); i--; }
                 break;
             case 15:
-                if (act == "\n")
-                {
-                    this.addError(this.aux_lexico); Estatico.FILAS++;Estatico.COLUMNAS = 0;
-                }
-                else {
-                    this.aux_lexico += act; this.estado = 16;
-                }
-                break;
-            case 16:
-                if (act == "\'")
-               {
-                    this.aux_lexico += act; this.addToken(Tipo.caracter);
-                }else if  (act == "\n")
-                {
-                    this.addError(this.aux_lexico);Estatico.FILAS; Estatico.COLUMNAS = 0;
+                if (act == "&") {  // AND LOGICO 
+                    this.aux_lexico += act;
+                    this.addToken(Tipo.sb_and);
+                } 
+                else if (act=="\n")
+                {   
+                    this.addError(this.aux_lexico);    Estatico.FILAS++;    Estatico.COLUMNAS = 0;
                 }
                 else
                 {
-                    this.aux_lexico += act; this.addError(this.aux_lexico);
+                    this.aux_lexico += act;
+                    this.addError(this.aux_lexico);
+                }        
+
+            break;
+            case 16:
+                if (act != "\'")
+                {
+                    let act2:any = act;
+                    this.aux_lexico += act;
+                    if (cadena_entrada.length - 1 == i)
+                    {
+
+                        this.addError(this.aux_lexico);
+                        alert(" no se encontro comilla de cierre");
+                    }
+                    if  (act2 == "\n")
+                    {
+                        Estatico.FILAS++;
+                        Estatico.COLUMNAS = 0 ; 
+                    }
+                   
+                }
+                else
+                {
+                    this.aux_lexico += act; this.addToken(Tipo.caracter);
                 }
                 break;
             case 17:
@@ -407,6 +429,18 @@ export class An_lexico{
                     {
                       //  System.Windows.Forms.MessageBox.Show("entra " + aux_lexico +"   "+act);
                         this.addToken(Tipo.p_WriteLine);
+
+                    } 
+                      else if (this.aux_lexico=="continue")
+                    {
+                      
+                        this.addToken(Tipo.p_res_continue);
+
+                    }   
+                    else if (this.aux_lexico=="return")
+                    {
+                      
+                        this.addToken(Tipo.P_res_return);
 
                     }
 

@@ -4,6 +4,9 @@ import { Entrada } from 'src/app/MODELS/Entrada';
 import {Token ,Tipo} from '../../MODELS/Token';
 import { variable, IfStmt } from '@angular/compiler/src/output/output_ast';
 import {An_lexico} from '../../MODELS/An_lexico';
+import{Router} from '@angular/router';
+import {ErrorLexico} from '../../MODELS/ErrorLexico';
+import {ErroresSintacticos} from '../../MODELS/ErroresSintacticos';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
@@ -12,56 +15,45 @@ import {An_lexico} from '../../MODELS/An_lexico';
 export class NavComponent implements OnInit {
   @HostBinding('class') clases = 'row';
   listaTXT : any = []; // lista de text area
-  entrada:Entrada = new Entrada(0 , "");
-  
+  guarda:string  = "";
+  cadena_traducir:Entrada = new Entrada(10,"");
+  cadena_html:Entrada = new Entrada(10,"");
+  cadena_json:Entrada = new Entrada(10,"");
 
-
-  constructor() {
-         let entrada:string = ". if else switch case  2 [[{};:] "
-         let analizador:An_lexico = new An_lexico(); 
-         analizador.analisis_lexico(entrada);
-         analizador.imprimir_tokens();
-   //  var variable:Token  =  new Token(Tipo.caracter , "Z"); // ASI SE CREA UNA VARIABLE 
- /* let lexico:An_lexico = new An_lexico(); 
-   let vector:any = [];
-   vector = lexico.getListaTokens();
-   console.log(vector[0].getValor_lexema());
-  console.log(vector[0].getTipo_str());
-  this.listaTXT.push(new Entrada(0,"SOY EL LEXEMA"));
-    var tok : Token = new Token(Tipo.caracter , "Z");
-    console.log("ID " + tok.getID() );
-    console.log("LEXEMA " + tok.getValor_lexema());
-    console.log("COLUMNA " + tok.getColumna());
-    console.log("FILA " + tok.getFila());
-    console.log("TIPO ENUM " + tok.getTipo());
-    console.log("TIPO STR " + tok.getTipo_str());
-  
-  
-  */
+  constructor(private router:Router) {
+    this.llenarListaTxt();    
+    
+    
    }
 
   
   ngOnInit(): void {
- 
+
   }
 
-  esDigito (caracter){
-    let ascii = caracter.charCodeAt(0);
-    return ascii > 47 && ascii < 58;
+  llenarListaTxt(){
+
+   this.listaTXT = Estatico.listaTXT;
   }
-  esLetra(caracter){
-    let ascii = caracter.toUpperCase().charCodeAt(0);
-    return ascii > 64 && ascii < 91;
-  }
+
+ 
   crear_nueva_ventana(){
     alert("creando nueva ventana");
-    let llama:An_lexico = new An_lexico(); 
-    llama.analisis_lexico("PABLO");
+    this.listaTXT.push(new Entrada(2,""));
   }
 
   analizar(){
     this.limpiarVariables();
-    console.log(this.entrada.cadena);
+    var txt_abrir = document.getElementById("abrir");
+    let entrada:string = txt_abrir.textContent;
+    let analizador:An_lexico = new An_lexico(); 
+    Estatico.guarda_entrada = entrada;
+    analizador.analisis_lexico(entrada);
+    console.log("ENTRADA : " + entrada);
+    Estatico.lista_mostrar_tokens = analizador.getListaTokens();
+    Estatico.lista_mostrar_errores_lexicos = analizador.getListaErrores();
+    this.listaTXT.push(new Entrada(3, Estatico.guarda_entrada));
+    alert("Analizando...");
     
     // lo envio a mi clase de analizador_lexico 
     // a la clase de mi analizador sintactico 
@@ -71,6 +63,14 @@ export class NavComponent implements OnInit {
   analizar2(cadena:any){
     this.limpiarVariables();
     console.log(cadena);
+    let analizador:An_lexico = new An_lexico(); 
+    analizador.analisis_lexico(cadena);
+    console.log("ENTRADA : " + cadena);
+    Estatico.lista_mostrar_tokens = analizador.getListaTokens();
+    Estatico.lista_mostrar_errores_lexicos = analizador.getListaErrores();
+
+
+    alert("Analizando...");
     // lo envio a mi clase de analizador_lexico 
     // a la clase de mi analizador sintactico 
     // si todo bien traduce sino nel 
@@ -81,19 +81,33 @@ export class NavComponent implements OnInit {
     Estatico.COLUMNAS = 0;
     Estatico.FILAS = 1;
     Token.CONTADORTOKEN = 1;
+    ErrorLexico.CONTADOR_ERRORES = 1;
+    ErroresSintacticos.CONT_SINTACTICOS = 1;
+  }
+
+
+  ir_lexico(){
+    this.router.navigate(['/lexico']);
+    Estatico.listaTXT = this.listaTXT;
+  }
+
+  ir_sitactico(){
+    this.router.navigate(['/sintactico']);
+    Estatico.listaTXT = this.listaTXT;
+  }
+    
+  restablecer(){
+    this.cadena_traducir.cadena = "TRADUCIR  SIN MODIFICAR";
+    this.cadena_html.cadena = "HTML SIN MODIFICAR";
+    this.cadena_json.cadena = "JSON SIN MODIFICACIONES";
+    
   }
 
 
 
 
-    
 
-
-
-
-
-
-
+  
 
 
 

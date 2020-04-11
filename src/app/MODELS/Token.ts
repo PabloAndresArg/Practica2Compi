@@ -49,7 +49,7 @@ export enum Tipo {
     p_res_case,
     p_res_break,
     p_res_default,
-    p_res_new,
+    p_res_continue,
     p_Console,
     p_WriteLine,
     punto,
@@ -205,8 +205,8 @@ export class Token{ // si falla implementar el '?'
           return "Palabra Reservada break";
       case Tipo.p_res_default:
           return "Palabra Reservada default";
-      case Tipo.p_res_new:
-          return "Palabra Reservada new";
+      case Tipo.p_res_continue:
+          return "Palabra Reservada Continue";
 
       case Tipo.p_Console:
           return "Objeto Console";

@@ -1,0 +1,42 @@
+
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg navbar-light bg-light alert alert-dark col-12" role="alert" >
+    <div class="container ">
+
+        <a class="navbar-brand"  routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"> <i class="fas fa-code"></i> COMPI 1 </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+             
+                <button class = "nav-link btn  " (click) = "ir_principal()">
+                  <p> BACK <i class="fa fa-inbox" aria-hidden="true"></i>   </p>
+                </button>
+                
+              </li>
+
+            <li class="nav-item">
+             
+              <button class = "nav-link btn  " (click) = "ir_lexico()">
+                <p> LEXICO <i class="fa fa-inbox" aria-hidden="true"></i>   </p>
+              </button>
+              
+            </li>
+
+            <li class="nav-item">
+              <button class = "nav-link btn " (click) = "ir_sitactico()">
+                <p> SINTACTICO <i class="fa fa-inbox" aria-hidden="true"></i>   </p>
+              </button>
+              
+            </li>
+          
+               
+              
+
+            
+          </ul>
+        </div>
+    </div>
+  </nav>

@@ -28,14 +28,14 @@
 
             <li class="nav-item">
              
-              <button class = "nav-link btn  ">
+              <button class = "nav-link btn  " (click) = "ir_lexico()">
                 <p> LEXICO <i class="fa fa-inbox" aria-hidden="true"></i>   </p>
               </button>
               
             </li>
 
             <li class="nav-item">
-              <button class = "nav-link btn  ">
+              <button class = "nav-link btn " (click) = "ir_sitactico()">
                 <p> SINTACTICO <i class="fa fa-inbox" aria-hidden="true"></i>   </p>
               </button>
               
@@ -61,10 +61,9 @@
     
       <div class="carousel-inner">
         <div class="carousel-item active ">
-          <textarea id = "abrir" [(ngModel)] = "entrada.cadena" class="d-block justify-content-center">
-            primer texto
+          <textarea id = "abrir"  class="d-block justify-content-center">
+           ESTE TEXTAREA ES SOLO PARA LEER ARCHIVOS , NO MODIFICAR
           </textarea>   
-  
           <button class = "btn btn-primary col-11" (click) = "analizar()">
             <p>ANALIZAR <i class="fa fa-check-square" aria-hidden="true"></i></p>
           </button>
@@ -74,7 +73,7 @@
      <!-- el modelo teine que ser de tipo entrada-->
         <div class="carousel-item" *ngFor='let obj of listaTXT' > 
           <textarea [(ngModel)] = "obj.cadena" class="d-block  justify-content-center">
-            {{entrada}}
+            {{obj.cadena}}
           </textarea>   
          
           <button class = "btn btn-primary col-11" (click) = "analizar2(obj.cadena)">
@@ -97,7 +96,7 @@
 
     <!--ROW-->
     <div class = "col-2"></div>
-    <textarea id = "traductor" ng-model="myTextarea" class="d-block  justify-content-center ">
+    <textarea id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer()" (change) = "restablecer()" class="d-block  justify-content-center ">
     </textarea>  
     
 
@@ -126,12 +125,12 @@
     
       <div class="carousel-inner">
         <div class="carousel-item active ">
-          <textarea ng-model="myTextarea" class="d-block justify-content-center" id="H_tml">
+          <textarea [(ngModel)] = "cadena_html.cadena"   class="d-block justify-content-center" id="H_tml">
            MUESTRA HTML
           </textarea>   
         </div>
         <div class="carousel-item">
-          <textarea ng-model="myTextarea" class="d-block justify-content-center" id="J_son">
+          <textarea  [(ngModel)] = "cadena_json.cadena" class="d-block justify-content-center" id="J_son">
            MUESTRA JSON 
           </textarea>   
         </div>
@@ -164,3 +163,8 @@
     <!--TERMINA LAS ROW -->
   </div>
 </div>
+
+
+
+
+

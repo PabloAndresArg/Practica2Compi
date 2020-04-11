@@ -10,4 +10,11 @@ public static FILAS:number = 1;
 public static COLUMNAS:number = 0;// ejemplo de commo importar algo estatico 
 
 
+public static lista_mostrar_tokens:any = [];
+public static lista_mostrar_errores_lexicos:any = [];
+public static listaTXT:any = [];
+public static guarda_entrada:any = ""; 
+public static guarda_traduccion:any = ""; 
+public static guarda_cadena_html:any = ""; 
+public static guarda_cadena_json:any = ""; 
 }

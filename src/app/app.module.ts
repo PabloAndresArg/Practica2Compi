@@ -5,11 +5,17 @@ import {FormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavComponent } from './COMPONENTES/nav/nav.component';
+import { LexicoComponent } from './COMPONENTES/lexico/lexico.component';
+import { SintacticoComponent } from './COMPONENTES/sintactico/sintactico.component';
+import { RegresoComponent } from './COMPONENTES/regreso/regreso.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent
+    NavComponent,
+    LexicoComponent,
+    SintacticoComponent,
+    RegresoComponent
   ],
   imports: [
     BrowserModule,
