@@ -57,7 +57,8 @@ export enum Tipo {
     P_res_return,
     sb_and,
     sb_or,
-    sb_negacion
+    sb_negacion, 
+    p_res_do
 }
 export class Token{ // si falla implementar el '?' 
   public static CONTADORTOKEN : number = 1; // cada vez que le de analizar regresa a 0 
@@ -225,9 +226,11 @@ export class Token{ // si falla implementar el '?'
           return "OR LOGICO ";
       case Tipo.sb_negacion:
           return "NEGACION LOGICA";
+      case Tipo.p_res_do:
+          return "Palabra Reservada do";
 
       default:
-              return "NO REGISTRADO";// ME AVISA SI HAY UNO QUE ME FALTO REGISTRAR EN MI CLASE ENUM
+         return "FALTO ESPECIFICAR";// ME AVISA SI HAY UNO QUE ME FALTO REGISTRAR EN MI CLASE ENUM
 
       }
 

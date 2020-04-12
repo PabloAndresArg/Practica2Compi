@@ -21,7 +21,7 @@ export class An_lexico{
         for (let i = 0; i < cadena_entrada.length; i++) {
             Estatico.COLUMNAS++;
             act = cadena_entrada[i]; 
-            console.log(act);
+            
             switch (this.estado)
             {
                 case 0: 
@@ -349,6 +349,12 @@ export class An_lexico{
                         this.addToken(Tipo.p_res_void);
 
                     }
+                    else if (this.aux_lexico =="do")
+                    {
+                        
+                        this.addToken(Tipo.p_res_do);
+
+                    }
                     /*else if (this.aux_lexico=="Main") 
                     {
                         this.estado = 0;
@@ -501,7 +507,6 @@ export class An_lexico{
     }
 
     public addToken(tipoToken: Tipo){
-        console.log("ENTRA un token");
         this.ListaTokens_Salida.push(new Token(tipoToken, this.aux_lexico));
         this.aux_lexico = "";// LIMPIA LE ACUMULADOR
         this.estado = 0;

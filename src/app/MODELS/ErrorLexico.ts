@@ -12,7 +12,7 @@ constructor(Valor_error:string){
            this.fila = Estatico.FILAS;
            this.columna = Estatico.COLUMNAS;
             this.valor = Valor_error;
-            this.tipo = "desconocido";
+            this.tipo = "ERROR LEXICO";
             
             this.id = ErrorLexico.CONTADOR_ERRORES;
             ErrorLexico.CONTADOR_ERRORES++;

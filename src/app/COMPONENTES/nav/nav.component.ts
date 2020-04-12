@@ -7,6 +7,7 @@ import {An_lexico} from '../../MODELS/An_lexico';
 import{Router} from '@angular/router';
 import {ErrorLexico} from '../../MODELS/ErrorLexico';
 import {ErroresSintacticos} from '../../MODELS/ErroresSintacticos';
+import { An_sintatico } from 'src/app/MODELS/An_sintactico';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
@@ -49,10 +50,18 @@ export class NavComponent implements OnInit {
     let analizador:An_lexico = new An_lexico(); 
     Estatico.guarda_entrada = entrada;
     analizador.analisis_lexico(entrada);
-    console.log("ENTRADA : " + entrada);
     Estatico.lista_mostrar_tokens = analizador.getListaTokens();
     Estatico.lista_mostrar_errores_lexicos = analizador.getListaErrores();
     this.listaTXT.push(new Entrada(3, Estatico.guarda_entrada));
+   
+
+    let sharp:Token  = new Token(Tipo.sharp, "fin_de_entrada");
+    let lista_analizar:any[] = analizador.getListaTokens();
+    lista_analizar.push(sharp);
+    let llama_sintactico:An_sintatico = new An_sintatico(lista_analizar);
+    
+
+   
     alert("Analizando...");
     
     // lo envio a mi clase de analizador_lexico 
@@ -62,12 +71,15 @@ export class NavComponent implements OnInit {
   }
   analizar2(cadena:any){
     this.limpiarVariables();
-    console.log(cadena);
     let analizador:An_lexico = new An_lexico(); 
     analizador.analisis_lexico(cadena);
-    console.log("ENTRADA : " + cadena);
     Estatico.lista_mostrar_tokens = analizador.getListaTokens();
     Estatico.lista_mostrar_errores_lexicos = analizador.getListaErrores();
+    
+    let sharp:Token  = new Token(Tipo.sharp, "fin_de_entrada");
+    let lista_analizar:any[] = analizador.getListaTokens();
+    lista_analizar.push(sharp);
+    let llama_sintactico:An_sintatico = new An_sintatico(lista_analizar);
 
 
     alert("Analizando...");

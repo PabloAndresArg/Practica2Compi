@@ -1,0 +1,173 @@
+
+
+
+Inicio -> P_Class ID "{" Lista_inst  "}"
+Lista_inst -> Instruccion Lista_inst'
+Lista_inst'-> Instruccion Lista_inst'
+			|epsilon
+
+
+Instruccion->  Declaracion
+ 			  |Sentencia_while
+ 			  |Sentencia_for
+ 			  |SentenciaImprime
+ 			  |Sentencia_if
+ 			  |SentenciaSwitch_case
+ 			  |asignacionSimple
+			  |Sentencia_do_while
+			  |sentencia_llama_metodo      // se topa con asignacionSimple
+			  |opcionMetodoFuncion     // se topa declaracion 
+			  |epsilon
+				// solo puede ser usadas en ciertos casos  seran Instruccion pero que tendran una condicion bool 
+			  |Sentencia_return_funciones
+			  |Sentencia_continue
+			  |sentencia_break
+
+
+// un sentencia_llama_metodo  sera considerado como una expresion 
+
+
+
+opcionMetodoFuncion-> Tipo ID  lista_parametros ")" "{" Lista_inst "}"
+					| ")" "{" Lista_inst "}"
+
+lista_parametros -> ","  Tipo ID  lista_parametros
+			| epsilon
+
+
+// en el void activo la bool de metodo 
+Declaracion-> p_res_void ID  "(" opcionMetodoFuncion
+			| tipo ID DeclaracionP
+
+// activo bool de funcion 
+DeclaracionP ->"(" opcionMetodoFuncion
+			  |Lista_ids ";"
+
+Lista_ids -> asignacion lista_ids'
+lista_ids'-> "," ID asignacion  lista_ids'
+			| epsilon
+asignacion'-> "=" expresion 
+			| epsilon 
+
+
+
+asignacionSimple -> ID OpcionAsignacion
+OpcionAsignacion->  "="  expresion ";"
+				  | "(" sentencia_llama_metodo
+
+sentencia_llama_metodo -> Tipo ID  lista_parametros ")" ";"
+					| ")" ";"
+
+
+
+
+
+sentencia_break-> p_break ";"
+
+Sentencia_do_while-> p_res_do "{" Lista_inst "}" palabra_while "(" lista_expresiones_condicionales ")" ";"
+
+
+sentencia_continue-> p_res_continue	";"
+
+
+Sentencia_return_funciones-> p_res_return expresion ";"
+Sentencia_return_metodos-> p_res_return ";"
+
+
+ListaExpresiones -> expresion Lista_expresion'
+Lista_expresion' -> "," expresion Lista_expresion'
+		   			|epsilon 
+
+
+Sentencia_if -> P_if "(" lista_expresiones_condicionales ")" "{" Lista_inst "}" else'
+
+else'-> P_else	"{" Lista_inst "}"
+		|epsilon
+
+Sentencia_while -> P_while "(" lista_expresiones_condicionales ")" "{" Lista_inst "}"
+
+Sentencia_for -> P_for "(" declaracionFOR ";" lista_expresiones_condicionales ";" ID DecrementoIncremento")" "{" Lista_inst "}"
+
+DecrementoIncremento -> "++"
+					   |"--"
+
+declaracionFOR -> Tipo ID "=" expresion 
+				| id "=" expresion
+
+
+
+
+
+lista_expresiones_condicionales -> expresion ListaExpresionesCondicionalesP
+ListaExpresionesCondicionalesP -> "&&"  expresion ListaExpresionesCondicionalesP
+								| "||"  expresion ListaExpresionesCondicionalesP
+								| epsilon
+Tipo -> Int 
+		|double 
+		|Char 
+		|String 
+		|Bool
+
+
+
+
+
+SentenciaImprime -> P_res_Console ". " P_WriteLine "(" expresion' ")" ";"
+
+
+SentenciaSwitch_case -> P_switch "(" ID ")" "{"  ListaCases  Default'   "}"
+
+ListaCases -> case listaCase'
+listaCase' -> case listaCase'
+			|epsilon
+
+caseP ->p_case opcionCase ":" Lista_inst  sentencia_break
+
+OpcionBreak-> p_break ";"  // PREGUNTAR 
+			| epsilon
+
+OpcionCase->  Num
+			| cadena
+			| caracter
+			// ver si se puede bool tambien 
+
+Default' -> P_default ":" Lista_inst  p_break ";"
+		|epsilon
+
+
+
+Expresion->E  simboloComparacionOpcional 
+
+ simboloComparacionOpcional  ->  ==  E  
+							 | > E
+ 							 | < E
+							 | <= E
+ 							 | >= E
+ 							 | ! opcionNot
+ 							 | Epsilon
+
+opcionNot -> = E
+			| E
+
+
+
+E-> TE'
+E'->+TE'
+ |-TE'
+ | Epsilon
+T-> FT'
+T'->*FT'
+ | / FT'
+ |Epsilon
+F-> Decimales
+ | Cadena
+ | ID ExpresionMetodo
+ | true
+ | false
+ | Numero
+ | caracter
+
+ExpresionMetodo -> "(" sentencia_llama_metodo 
+					| epsilon
+sentencia_llama_metodo -> Tipo ID  lista_parametros ")"
+					| ")" 
