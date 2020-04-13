@@ -6,11 +6,11 @@ import {Estatico} from '../../MODELS/Estatico';
   styleUrls: ['./lexico.component.css']
 })
 export class LexicoComponent implements OnInit {
-  id:number;
+  
   tokens: any = [];
   errores:any = [];
   constructor() {
-    this.id = 1;
+    
     this.tokens = Estatico.lista_mostrar_tokens;
     this.errores = Estatico.lista_mostrar_errores_lexicos;
    }

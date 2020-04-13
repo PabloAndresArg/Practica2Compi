@@ -16,7 +16,8 @@
             </li>
 
             <li class="nav-item">
-              <input id="fileInput"  type="file" size="50" onchange="processFiles(this.files)" class = "nav-link btn  ">
+              
+              <input id="fileInput"  type="file" size="40" (change) ="fileChanged($event)" class = "nav-link btn  ">
               
             </li>
                            
@@ -61,8 +62,9 @@
     
       <div class="carousel-inner">
         <div class="carousel-item active ">
-          <textarea id = "abrir"  class="d-block justify-content-center">
-           ESTE TEXTAREA ES SOLO PARA LEER ARCHIVOS , NO MODIFICAR
+              
+          <textarea  id = "abrir"   [(ngModel)] = "filestring" class="d-block justify-content-center">
+      
           </textarea>   
           <button class = "btn btn-primary col-11" (click) = "analizar()">
             <p>ANALIZAR <i class="fa fa-check-square" aria-hidden="true"></i></p>
@@ -99,7 +101,7 @@
     <textarea id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer()" (change) = "restablecer()" class="d-block  justify-content-center ">
     </textarea>  
     
-
+ 
 
 
 

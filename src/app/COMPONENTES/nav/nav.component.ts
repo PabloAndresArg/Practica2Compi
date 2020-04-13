@@ -17,14 +17,27 @@ export class NavComponent implements OnInit {
   @HostBinding('class') clases = 'row';
   listaTXT : any = []; // lista de text area
   guarda:string  = "";
+
+  public filestring:any = "ESTE TEXTAREA ES SOLO PARA LEER ARCHIVOS , NO MODIFICAR"; 
+  file:any; 
+  unlocown:any; 
+  
+
   cadena_traducir:Entrada = new Entrada(10,"");
   cadena_html:Entrada = new Entrada(10,"");
   cadena_json:Entrada = new Entrada(10,"");
+  guarda_traduccion:string =""; // igual para HTML Y JSON 
+  guarda_cadena_html:string = ""; 
+  guarda_cadena_json:string="";
+
 
   constructor(private router:Router) {
+    this.guarda_traduccion = Estatico.guarda_traduccion;
+    this.guarda_cadena_html= Estatico.guarda_cadena_html; 
+    this.guarda_cadena_json = Estatico.guarda_cadena_json;
     this.llenarListaTxt();    
-    
-    
+    this.restablecer();
+    this.filestring = Estatico.guarda_entrada;
    }
 
   
@@ -45,22 +58,31 @@ export class NavComponent implements OnInit {
 
   analizar(){
     this.limpiarVariables();
-    var txt_abrir = document.getElementById("abrir");
-    let entrada:string = txt_abrir.textContent;
+    let entrada:string = this.filestring;
     let analizador:An_lexico = new An_lexico(); 
     Estatico.guarda_entrada = entrada;
     analizador.analisis_lexico(entrada);
     Estatico.lista_mostrar_tokens = analizador.getListaTokens();
     Estatico.lista_mostrar_errores_lexicos = analizador.getListaErrores();
-    this.listaTXT.push(new Entrada(3, Estatico.guarda_entrada));
+    
    
 
     let sharp:Token  = new Token(Tipo.sharp, "fin_de_entrada");
     let lista_analizar:any[] = analizador.getListaTokens();
     lista_analizar.push(sharp);
     let llama_sintactico:An_sintatico = new An_sintatico(lista_analizar);
-    
+    Estatico.lista_mostrar_errores_sintacticos = llama_sintactico.getListaErrores();
+    lista_analizar.pop();
 
+
+    if(analizador.getListaErrores().length == 0 &&  llama_sintactico.getListaErrores().length == 0 ){
+      this.traduce(llama_sintactico.getCADENATRADUCIDA());
+    }else{
+      alert("LA ENTRADA POSEE ERRORES");
+      this.guarda_traduccion = "";
+      this.cadena_traducir.cadena = "";
+    }
+   
    
     alert("Analizando...");
     
@@ -80,7 +102,17 @@ export class NavComponent implements OnInit {
     let lista_analizar:any[] = analizador.getListaTokens();
     lista_analizar.push(sharp);
     let llama_sintactico:An_sintatico = new An_sintatico(lista_analizar);
+    Estatico.lista_mostrar_errores_sintacticos = llama_sintactico.getListaErrores();
+    lista_analizar.pop();
 
+    if(analizador.getListaErrores().length == 0 &&  llama_sintactico.getListaErrores().length == 0 ){
+      this.traduce(llama_sintactico.getCADENATRADUCIDA());
+    }else{
+      alert("LA ENTRADA POSEE ERRORES");
+      this.guarda_traduccion = "";
+      this.cadena_traducir.cadena = "";
+    }
+   
 
     alert("Analizando...");
     // lo envio a mi clase de analizador_lexico 
@@ -101,16 +133,18 @@ export class NavComponent implements OnInit {
   ir_lexico(){
     this.router.navigate(['/lexico']);
     Estatico.listaTXT = this.listaTXT;
+    Estatico.guarda_traduccion = this.guarda_traduccion;
   }
 
   ir_sitactico(){
     this.router.navigate(['/sintactico']);
     Estatico.listaTXT = this.listaTXT;
+    Estatico.guarda_traduccion = this.guarda_traduccion;
   }
     
   restablecer(){
-    this.cadena_traducir.cadena = "TRADUCIR  SIN MODIFICAR";
-    this.cadena_html.cadena = "HTML SIN MODIFICAR";
+    this.cadena_traducir.cadena = this.guarda_traduccion;
+    this.cadena_html.cadena = "HTML SIN MODIFICAR"; // DARLES SUS THIS DE CADA CADENA 
     this.cadena_json.cadena = "JSON SIN MODIFICACIONES";
     
   }
@@ -118,13 +152,34 @@ export class NavComponent implements OnInit {
 
 
 
-
+  traduce(cadena_del_sintactico:string){
+    let t1:string  = "";
+    let comentarioBloque:string = "\'" + " " + "\'" + " " + "\'";
+    t1 = cadena_del_sintactico.replace("//", "#").replace("/*", comentarioBloque).replace("*/", comentarioBloque);
+    //ya tiene comentarios 
+    t1 = t1.replace("int","").replace("string","").replace("double","").replace("char","").replace("bool","");
+    t1 = t1.replace("string", "").replace("char", "");
+    t1 = t1.replace("String","").replace("Char","");
+    // ya estan los tipos
+    t1 = t1.replace("Console.Write","print");
+    this.guarda_traduccion = t1;
+    this.cadena_traducir.cadena = t1;
+  }
   
 
 
-
-
-
+fileChanged(e) {
+  this.file = e.target.files[0];
+  this.uploadDocument();
+}
+uploadDocument(){
+let fileReader = new FileReader(); 
+fileReader.onload = (e) =>{
+  console.log(fileReader.result);
+  this.filestring = fileReader.result;
+}
+fileReader.readAsText(this.file);
+}
 
 
 

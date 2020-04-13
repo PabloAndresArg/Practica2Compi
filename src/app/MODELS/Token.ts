@@ -51,14 +51,15 @@ export enum Tipo {
     p_res_default,
     p_res_continue,
     p_Console,
-    p_WriteLine,
+    p_Write,
     punto,
     p_for,
     P_res_return,
     sb_and,
     sb_or,
     sb_negacion, 
-    p_res_do
+    p_res_do,
+    p_res_double
 }
 export class Token{ // si falla implementar el '?' 
   public static CONTADORTOKEN : number = 1; // cada vez que le de analizar regresa a 0 
@@ -211,8 +212,8 @@ export class Token{ // si falla implementar el '?'
 
       case Tipo.p_Console:
           return "Objeto Console";
-      case Tipo.p_WriteLine:
-          return "Propiedad WriteLine";
+      case Tipo.p_Write:
+          return "Propiedad Write";
 
       case Tipo.punto:
           return "punto";
@@ -228,7 +229,8 @@ export class Token{ // si falla implementar el '?'
           return "NEGACION LOGICA";
       case Tipo.p_res_do:
           return "Palabra Reservada do";
-
+      case Tipo.p_res_double:
+          return"Palabra Reservada double";
       default:
          return "FALTO ESPECIFICAR";// ME AVISA SI HAY UNO QUE ME FALTO REGISTRAR EN MI CLASE ENUM
 

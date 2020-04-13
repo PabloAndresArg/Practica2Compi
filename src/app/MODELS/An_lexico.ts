@@ -306,13 +306,6 @@ export class An_lexico{
                         this.addToken(Tipo.p_res_Int);
 
                     }
-                    else if (this.aux_lexico =="float")
-                    {
-                        
-                        this.addToken(Tipo.p_res_Float);
-
-                        
-                    }
                     else if  (this.aux_lexico =="char" || this.aux_lexico =="Char")
                     {
                         
@@ -354,6 +347,8 @@ export class An_lexico{
                         
                         this.addToken(Tipo.p_res_do);
 
+                    }else if(this.aux_lexico == "double"){
+                        this.addToken(Tipo.p_res_double);
                     }
                     /*else if (this.aux_lexico=="Main") 
                     {
@@ -431,10 +426,10 @@ export class An_lexico{
                         this.addToken(Tipo.p_Console);
                         // System.Windows.Forms.MessageBox.Show(aux_lexico);
                     }
-                    else if (this.aux_lexico=="WriteLine")
+                    else if (this.aux_lexico=="Write")
                     {
                       //  System.Windows.Forms.MessageBox.Show("entra " + aux_lexico +"   "+act);
-                        this.addToken(Tipo.p_WriteLine);
+                        this.addToken(Tipo.p_Write);
 
                     } 
                       else if (this.aux_lexico=="continue")

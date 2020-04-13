@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import {Estatico} from '../../MODELS/Estatico';
 @Component({
   selector: 'app-sintactico',
   templateUrl: './sintactico.component.html',
@@ -7,7 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SintacticoComponent implements OnInit {
 
-  constructor() { }
+  
+  errores:any = [];
+  constructor() {
+    this.errores = Estatico.lista_mostrar_errores_sintacticos;
+   }
 
   ngOnInit(): void {
   }
