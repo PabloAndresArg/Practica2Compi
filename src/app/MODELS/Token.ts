@@ -103,7 +103,7 @@ export class Token{ // si falla implementar el '?'
   }
 
 
-  public  getTipo_str():String
+  public  getTipo_str():string
   {
       switch (this.Tipo_token)
       {

@@ -7,16 +7,16 @@ Lista_inst'-> Instruccion Lista_inst'
 			|epsilon
 
 
-Instruccion->  Declaracion
- 			  |Sentencia_while
- 			  |Sentencia_for
- 			  |SentenciaImprime
- 			  |Sentencia_if
+Instruccion->  Declaracion                // YA
+ 			  |Sentencia_while			  // YA 
+ 			  |Sentencia_for			  //YA
+ 			  |SentenciaImprime		      // YA 
+ 			  |Sentencia_if				  // YA 
  			  |SentenciaSwitch_case
- 			  |asignacionSimple
-			  |Sentencia_do_while
-			  |sentencia_llama_metodo      // se topa con asignacionSimple
-			  |opcionMetodoFuncion     // se topa declaracion 
+ 			  |asignacionSimple			  // YA 
+			  |Sentencia_do_while		  // YA
+			  |sentencia_llama_metodo     //ya, se topa con asignacionSimple // YA 
+			  |opcionMetodoFuncion     //ya,  se topa Declaracion 
 			  |epsilon
 				// solo puede ser usadas en ciertos casos  seran Instruccion pero que tendran una condicion bool 
 			  |Sentencia_return_funciones
@@ -27,6 +27,7 @@ Instruccion->  Declaracion
 // un sentencia_llama_metodo  sera considerado como una expresion 
 
 
+ListaIns_entreLLaves-> "{" Lista_inst "}"
 
 opcionMetodoFuncion-> Tipo ID  lista_parametros ")" "{" Lista_inst "}"
 					| ")" "{" Lista_inst "}"
@@ -41,11 +42,11 @@ Declaracion-> p_res_void ID  "(" opcionMetodoFuncion
 
 // activo bool de funcion 
 DeclaracionP ->"(" opcionMetodoFuncion
-			  |Lista_ids ";"
+			  |Lista_ids asignacion ";"
 
-Lista_ids -> asignacion lista_ids'
-lista_ids'-> "," ID asignacion  lista_ids'
+Lista_ids-> "," ID  lista_ids
 			| epsilon
+
 asignacion'-> "=" expresion 
 			| epsilon 
 
@@ -53,18 +54,20 @@ asignacion'-> "=" expresion
 
 asignacionSimple -> ID OpcionAsignacion
 OpcionAsignacion->  "="  expresion ";"
-				  | "(" sentencia_llama_metodo
+				  | "(" sentencia_llama_metodo ";"
 
-sentencia_llama_metodo -> Tipo ID  lista_parametros ")" ";"
-					| ")" ";"
+sentencia_llama_metodo -> Tipo ID  lista_parametros ")" 
+					| ")" 
 
+sentencia_llama_metodo -> ")" 
+					|  ListaExpresiones ")"
 
 
 
 
 sentencia_break-> p_break ";"
 
-Sentencia_do_while-> p_res_do "{" Lista_inst "}" palabra_while "(" lista_expresiones_condicionales ")" ";"
+Sentencia_do_while-> p_res_do ListaIns_entreLLaves  palabra_while "(" lista_expresiones_condicionales ")" ";"
 
 
 sentencia_continue-> p_res_continue	";"
@@ -74,19 +77,22 @@ Sentencia_return_funciones-> p_res_return expresion ";"
 Sentencia_return_metodos-> p_res_return ";"
 
 
-ListaExpresiones -> expresion Lista_expresion'
-Lista_expresion' -> "," expresion Lista_expresion'
+ListaExpresiones -> expresion Lista_expresionP
+Lista_expresionP -> "," expresion Lista_expresionP
 		   			|epsilon 
 
 
-Sentencia_if -> P_if "(" lista_expresiones_condicionales ")" "{" Lista_inst "}" else'
+Sentencia_if -> P_if "(" lista_expresiones_condicionales ")" ListaIns_entreLLaves else'
 
-else'-> P_else	"{" Lista_inst "}"
+else'-> P_else multiplesIf
 		|epsilon
+multiplesIf -> |  ListaIns_entreLLaves
+ 			   | sentencia_if
+		    
 
-Sentencia_while -> P_while "(" lista_expresiones_condicionales ")" "{" Lista_inst "}"
+Sentencia_while -> P_while "(" lista_expresiones_condicionales ")" ListaIns_entreLLaves
 
-Sentencia_for -> P_for "(" declaracionFOR ";" lista_expresiones_condicionales ";" ID DecrementoIncremento")" "{" Lista_inst "}"
+Sentencia_for -> P_for "(" declaracionFOR ";" lista_expresiones_condicionales ";" ID DecrementoIncremento")" ListaIns_entreLLaves
 
 DecrementoIncremento -> "++"
 					   |"--"
@@ -143,11 +149,9 @@ Expresion->E  simboloComparacionOpcional
  							 | < E
 							 | <= E
  							 | >= E
- 							 | ! opcionNot
+ 							 | != E
  							 | Epsilon
 
-opcionNot -> = E
-			| E
 
 
 
@@ -166,8 +170,10 @@ F-> Decimales
  | false
  | Numero
  | caracter
+ | !E
+ | (Expresion)
 
 ExpresionMetodo -> "(" sentencia_llama_metodo 
 					| epsilon
-sentencia_llama_metodo -> Tipo ID  lista_parametros ")"
+sentencia_llama_metodo -> ListaExpresiones ")"
 					| ")" 

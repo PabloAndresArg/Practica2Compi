@@ -155,15 +155,8 @@ export class NavComponent implements OnInit {
   traduce(cadena_del_sintactico:string){
     let t1:string  = "";
     let comentarioBloque:string = "\'" + " " + "\'" + " " + "\'";
-    t1 = cadena_del_sintactico.replace("//", "#").replace("/*", comentarioBloque).replace("*/", comentarioBloque);
-    //ya tiene comentarios 
-    t1 = t1.replace("int","").replace("string","").replace("double","").replace("char","").replace("bool","");
-    t1 = t1.replace("string", "").replace("char", "");
-    t1 = t1.replace("String","").replace("Char","");
-    // ya estan los tipos
-    t1 = t1.replace("Console.Write","print");
-    this.guarda_traduccion = t1;
-    this.cadena_traducir.cadena = t1;
+    this.guarda_traduccion = cadena_del_sintactico;
+    this.cadena_traducir.cadena = cadena_del_sintactico;
   }
   
 

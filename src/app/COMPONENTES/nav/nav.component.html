@@ -58,15 +58,27 @@
   
 <div class = "container"> 
   <div class = "row">
-    <div id="carouselExampleControls" class="carousel slide  col-6" data-ride="carousel" data-interval="false">
+    <div id="carouselExampleControls" class="carousel slide  col-6 tam_carusel" data-ride="carousel" data-interval="false">
     
-      <div class="carousel-inner">
-        <div class="carousel-item active ">
-              
-          <textarea  id = "abrir"   [(ngModel)] = "filestring" class="d-block justify-content-center">
-      
-          </textarea>   
-          <button class = "btn btn-primary col-11" (click) = "analizar()">
+      <div class="carousel-inner tam_carusel">
+        <div class="carousel-item active tam_carusel">
+          <ngx-codemirror 
+          
+          id = "abrir" 
+          [(ngModel)] = "filestring"
+         [options]="{
+           lineNumbers: true,
+           matchBrackets:true,
+           styeleActiveLine:true,
+           theme: 'eclipse',
+           mode: 'javascript'
+         }"
+       >
+       </ngx-codemirror>
+
+           
+         
+          <button class = "btn btn-primary adecuada" (click) = "analizar()">
             <p>ANALIZAR <i class="fa fa-check-square" aria-hidden="true"></i></p>
           </button>
         </div>
@@ -75,8 +87,13 @@
      <!-- el modelo teine que ser de tipo entrada-->
         <div class="carousel-item" *ngFor='let obj of listaTXT' > 
           <textarea [(ngModel)] = "obj.cadena" class="d-block  justify-content-center">
-            {{obj.cadena}}
+          
           </textarea>   
+
+       
+
+
+
          
           <button class = "btn btn-primary col-11" (click) = "analizar2(obj.cadena)">
             <p>ANALIZAR <i class="fa fa-check-square" aria-hidden="true" ></i></p>
@@ -96,11 +113,36 @@
       </a>
     </div>
 
-    <!--ROW-->
-    <div class = "col-2"></div>
-    <textarea id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer()" (change) = "restablecer()" class="d-block  justify-content-center ">
-    </textarea>  
+
+
+
+
+
+
+
+
+    <!--ROW
+     <textarea id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer()" (change) = "restablecer()" class="d-block  justify-content-center ">
+      </textarea>  
+
+    -->
+ 
+
+     
+
     
+<ngx-codemirror 
+id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer()" (change) = "restablecer()"
+[options]="{
+ lineNumbers: true,
+ matchBrackets:true,
+ styeleActiveLine:true,
+ theme: 'dracula',
+ mode: 'javascript'
+}"
+>
+
+</ngx-codemirror>
  
 
 
@@ -123,19 +165,44 @@
 
 
 
-    <div id="posCarusel" class="carousel slide  col-6" data-ride="carousel" data-interval="false">
+    <div id="posCarusel"  class="carousel slide  col-6 " data-ride="carousel" data-interval="false">
     
       <div class="carousel-inner">
         <div class="carousel-item active ">
+
+          <ngx-codemirror 
+          id="H_tml"   [(ngModel)] = "cadena_html.cadena" (focus) = "restablecer()" (change) = "restablecer()"
+[options]="{
+ lineNumbers: true,
+ matchBrackets:true,
+ styeleActiveLine:true,
+ theme: 'dracula',
+ mode: 'javascript'
+}"
+>
+
+</ngx-codemirror>
+          <!--
           <textarea [(ngModel)] = "cadena_html.cadena"   class="d-block justify-content-center" id="H_tml">
            MUESTRA HTML
-          </textarea>   
+          </textarea> 
+          -->
+           
         </div>
         <div class="carousel-item">
+
+
           <textarea  [(ngModel)] = "cadena_json.cadena" class="d-block justify-content-center" id="J_son">
            MUESTRA JSON 
           </textarea>   
+        
+
+
+
         </div>
+
+
+
       </div>
   
       <a class="carousel-control-prev " href="#posCarusel" role="button" data-slide="prev">
@@ -165,6 +232,20 @@
     <!--TERMINA LAS ROW -->
   </div>
 </div>
+
+
+
+
+
+
+
+  
+
+          
+
+
+
+
 
 
 

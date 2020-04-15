@@ -10,17 +10,19 @@ textarea {
  }
 
  #traductor{
+   position:absolute;
+    top:110px;
     left:910px;
     right: 400px;
-    position:absolute;
-    height: 275px;
-    width: 470px;
+    /*width: 470px;*/
+    width: 620px; 
  }
  #J_son{
     height: 357px;
     width: 600px;
  }
  #H_tml{
+   top:15px;
     height: 357px;
     width: 600px; 
  }
@@ -33,7 +35,21 @@ textarea {
     position:absolute;
     left:900px;
     right: 400px;
-   top:400px;
+   top:450px;
    height: 200px;
-   width: 490px; 
+   width: 620px; 
  }
+
+ #abrir{
+   height: 10000px;
+   width: 1000px; 
+ }
+ .tam_carusel{
+   width: 550px; 
+   height: 750px;
+ }
+ .adecuada{
+    width: 600px;
+ }
+
+

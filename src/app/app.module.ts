@@ -9,6 +9,8 @@ import { LexicoComponent } from './COMPONENTES/lexico/lexico.component';
 import { SintacticoComponent } from './COMPONENTES/sintactico/sintactico.component';
 import { RegresoComponent } from './COMPONENTES/regreso/regreso.component';
 
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +22,8 @@ import { RegresoComponent } from './COMPONENTES/regreso/regreso.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    CodemirrorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

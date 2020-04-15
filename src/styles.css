@@ -1,4 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "~codemirror/lib/codemirror";
+@import "~codemirror/theme/material";
+@import "~codemirror/theme/eclipse";
+@import "~codemirror/theme/dracula";
+@import "~codemirror/theme/cobalt";
+
 body{
 
     background-image: url(./assets/CIRCUITO1.jpg);
@@ -9,3 +16,4 @@ body{
     font-family: cursive;
 
 }
+

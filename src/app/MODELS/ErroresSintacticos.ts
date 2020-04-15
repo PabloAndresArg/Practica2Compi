@@ -4,12 +4,12 @@ export class ErroresSintacticos{
     private fila : number ; 
     private error:string;
     private id:number;
-    constructor(fila_ : number , columna_:number , error:string){// fil acolumna error
+    constructor(fila_ : number , columna_:number , error:string , encontro:any){// fil acolumna error
         this.id = ErroresSintacticos.CONT_SINTACTICOS; 
         ErroresSintacticos.CONT_SINTACTICOS++; 
         this.fila = fila_; 
         this.columna = columna_; 
-        this.error = "se esperaba ---->   " + error  + "  ";
+        this.error = "se esperaba  " + error  + "   en lugar de   "+encontro +"   ";
     }
      
     public getID():number{
