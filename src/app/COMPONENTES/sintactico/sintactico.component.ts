@@ -9,7 +9,7 @@ export class SintacticoComponent implements OnInit {
 
   
   errores:any = [];
-  constructor() {
+   constructor() {
     this.errores = Estatico.lista_mostrar_errores_sintacticos;
    }
 

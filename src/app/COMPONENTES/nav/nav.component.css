@@ -53,3 +53,32 @@ textarea {
  }
 
 
+ .tabl{
+   background-color: black;
+   text-align : center;
+   FONT-SIZE: 18px;
+   FONT-FAMILY: Arial;
+   color:white;
+   font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+.tituloTb{
+   text-align: center;
+   color:deepskyblue;
+}
+.tituloErr{
+   text-align: center;
+   color: darkorange;
+}
+
+.subir_tabla{
+   position:absolute;
+   top:520px;
+   width: 600px;
+   height: auto;
+}
+
+.acomodaTexAr{
+   width: 600px;
+   height: 300px;
+}

@@ -1,6 +1,7 @@
 import {ErroresSintacticos} from './ErroresSintacticos';
 import {Token, Tipo} from './Token';
-
+import {Tabla_Simbolos} from './Tabla_Simbolos';
+import { Estatico } from './Estatico';
 export class An_sintatico{
      // variables solo para el parea 
      private hay_error:boolean = false; 
@@ -22,8 +23,13 @@ export class An_sintatico{
     listaTok:any = [];
     sig :number;  
   
-
+    
     // ATRIBUTOS PARA TRADUCIR 
+    private save_expression:boolean = false;
+    private GUARDAR_EXPRESION :string="";
+    private nombres_variables_declaracion:any=[];
+    private tabla:any =[];
+    private TipoActualVariable:string = "";
     nombreVar:string  = "";
     esElMain:boolean = false;
     private guardarIntervalo:number = 0; 
@@ -36,6 +42,9 @@ export class An_sintatico{
     public getCADENATRADUCIDA():string{
         
         return this.cadena_traducida;
+    }
+    public getTablaSIMBOLOS():any[] {
+        return this.tabla;
     }
     public getListaErrores():any[]{
         return this.lista_errores_sin; 
@@ -63,6 +72,7 @@ export class An_sintatico{
     }else{
         console.log("ESA ONDA TIENE ERROES SINTACTICOS");
     }
+   this.imprimirTABLA_SEND();
  
     }
 
@@ -337,14 +347,48 @@ export class An_sintatico{
             this.parea(Tipo.parentesis_izq);
             this.opcionMetodoFuncion();
         }else{
+            this.vaciarVariables()//VACIA CONTENEDOR AUX 
+            this.TipoActualVariable = this.tokenActual.getParaTabla();
+            
             this.Tipo(); 
-            this.nombreVar = this.tokenActual.getTipo_str();
+            this.nombreVar = this.tokenActual.getValor_lexema();
+            this.nombres_variables_declaracion.push(new Tabla_Simbolos(this.tokenActual.getValor_lexema(),this.TipoActualVariable , this.tokenActual.getFila(), this.getValorPorDefecto(this.TipoActualVariable))); // NOM , TIP , FIL , VAL
             this.Traducir = false;
             this.parea(Tipo.id);
             this.Traducir = true;
             this.DeclaracionP();
         }
     }
+    private vaciarVariables(){
+        let Vaciar:any =[];
+        this.nombres_variables_declaracion = Vaciar;
+    }
+    public imprimirTABLA(){
+        console.log("-------IMPRIMIENDO TABLA-------");
+        for (let x = 0; x <this.nombres_variables_declaracion.length; x++) {
+            console.log("VARIABLE " + this.nombres_variables_declaracion[x].getNombre() + " TIPO: " + this.nombres_variables_declaracion[x].getTipo() + " Fila " + this.nombres_variables_declaracion[x].getFila());
+        }
+        console.log("-------IMPRIMIENDO TABLA-------");
+    }
+    public getValorPorDefecto(tipo:string):string{
+        if(tipo == "int"){// SI CAMBIO ALGO ACA TENGO QUE CAMBIARLO TAMBIEN EN TOKEN 
+            return "0";
+        }
+        else if(tipo == "char"){
+            return "\' \'"
+
+        }else if(tipo == "string"){
+            return "\"\"";
+
+        }else if(tipo == "Bool"){
+            return "True"
+        }else if(tipo == "Double"){
+            return "0.00"
+        }else{
+            return " ";
+        }
+    }
+    
     private opcionMetodoFuncion(){
         this.ignoraComentarios();
         if(this.tokenActual.getTipo() == Tipo.parentesis_derecho || this.esElMain == true){
@@ -385,18 +429,52 @@ export class An_sintatico{
             this.parea(Tipo.parentesis_izq);this.acepta_return_funciones = true;
             this.opcionMetodoFuncion();
         }else{
-            this.cadena_traducida += this.nombreVar;
              this.Lista_ids();
              this.asignacion();
              this.parea(Tipo.punto_y_coma);
+             // PUNTO DE SEND CANDENA TRADUCIDA 
+             this.setValorAsignacion();
+             this.imprimirTABLA();
+             this.llenarListaTabla();
+            }
+    }
+    public llenarListaTabla(){
+        for (let x = 0; x <this.nombres_variables_declaracion.length; x++) {
+            let obj:Tabla_Simbolos = new Tabla_Simbolos(this.nombres_variables_declaracion[x].getNombre() , this.nombres_variables_declaracion[x].getTipo() , this.nombres_variables_declaracion[x].getFila()  , "");
+            this.tabla.push(obj);
+        } 
+    }
+    private setValorAsignacion(){
+        if(this.GUARDAR_EXPRESION =="NO"){
+            for (let x = 0; x <this.nombres_variables_declaracion.length; x++) {
+                this.tab();
+                this.cadena_traducida+= this.nombres_variables_declaracion[x].getNombre() +" = " +this.nombres_variables_declaracion[x].getValor() +"\n";
+            }
+             
+        }else{
+            for (let x = 0; x <this.nombres_variables_declaracion.length; x++) {
+                this.tab();
+                this.cadena_traducida+= this.nombres_variables_declaracion[x].getNombre() +" = " +this.GUARDAR_EXPRESION +"\n";
+            } 
+           
         }
+    }
+    public imprimirTABLA_SEND(){
+        console.log(" IMPRIMIENDO TABLA a MOSTRAR ");
+        for (let x = 0; x < this.tabla.length; x++) {
+            console.log("VAR: " + this.tabla[x].getNombre() + " TIPO: " + this.tabla[x].getTipo() + " Fila " + this.tabla[x].getFila());
+        }    
     }
     private Lista_ids(){
         this.ignoraComentarios();
         if(this.tokenActual.getTipo() == Tipo.coma ){
+            this.Traducir = false;
             this.parea(Tipo.coma);
+            this.nombres_variables_declaracion.push(new Tabla_Simbolos(this.tokenActual.getValor_lexema(),this.TipoActualVariable , this.tokenActual.getFila(), this.getValorPorDefecto(this.TipoActualVariable))); // NOM , TIP , FIL , VAL
             this.parea(Tipo.id);
             this.Lista_ids();
+            this.Traducir = true;
+             // PARA VER QUE PEX :v
 
         }else{
             // EPSILON 
@@ -406,9 +484,15 @@ export class An_sintatico{
     private asignacion(){
         this.ignoraComentarios();
         if(this.tokenActual.getTipo() == Tipo.igual){
+            this.Traducir = false;
+            this.GUARDAR_EXPRESION ="";
             this.parea(Tipo.igual);
+            this.save_expression = true;
             this.expresion();
+            this.save_expression = false;
+            this.Traducir = true;
         }else{
+             this.GUARDAR_EXPRESION ="NO";
             // epsilon 
         }
     }
@@ -812,6 +896,9 @@ export class An_sintatico{
 
         if((this.tokenActual.getTipo() == Tipo.punto_y_coma|| this.tokenActual.getTipo() == Tipo.llave_derecha || this.tokenActual.getTipo() == Tipo.llave_izq) && this.NO_salto == false){
             this.cadena_traducida = this.cadena_traducida + "\n";
+        }
+        if(this.save_expression == true){
+            this.GUARDAR_EXPRESION += this.tokenActual.getValor_lexema();
         }
  
             if (this.Traducir) {

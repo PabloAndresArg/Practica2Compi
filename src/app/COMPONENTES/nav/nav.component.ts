@@ -29,7 +29,7 @@ export class NavComponent implements OnInit {
   guarda_traduccion:string =""; // igual para HTML Y JSON 
   guarda_cadena_html:string = ""; 
   guarda_cadena_json:string="";
-
+  tabla_sin:any = [];
 
   constructor(private router:Router) {
     this.guarda_traduccion = Estatico.guarda_traduccion;
@@ -38,6 +38,7 @@ export class NavComponent implements OnInit {
     this.llenarListaTxt();    
     this.restablecer();
     this.filestring = Estatico.guarda_entrada;
+    this.tabla_sin = Estatico.lista_mostrar_tabla_simbolos;
    }
 
   
@@ -77,6 +78,8 @@ export class NavComponent implements OnInit {
 
     if(analizador.getListaErrores().length == 0 &&  llama_sintactico.getListaErrores().length == 0 ){
       this.traduce(llama_sintactico.getCADENATRADUCIDA());
+      Estatico.lista_mostrar_tabla_simbolos = llama_sintactico.getTablaSIMBOLOS();
+      this.tabla_sin =  Estatico.lista_mostrar_tabla_simbolos ;
     }else{
       alert("LA ENTRADA POSEE ERRORES");
       this.guarda_traduccion = "";
@@ -107,6 +110,8 @@ export class NavComponent implements OnInit {
 
     if(analizador.getListaErrores().length == 0 &&  llama_sintactico.getListaErrores().length == 0 ){
       this.traduce(llama_sintactico.getCADENATRADUCIDA());
+      Estatico.lista_mostrar_tabla_simbolos = llama_sintactico.getTablaSIMBOLOS();
+      this.tabla_sin =  Estatico.lista_mostrar_tabla_simbolos ;
     }else{
       alert("LA ENTRADA POSEE ERRORES");
       this.guarda_traduccion = "";

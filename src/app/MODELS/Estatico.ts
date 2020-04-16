@@ -1,3 +1,4 @@
+import { Tabla_Simbolos } from './Tabla_Simbolos';
 
 export class Estatico{
     nickname?:string;
@@ -15,8 +16,10 @@ public static lista_mostrar_errores_lexicos:any = [];
 public static lista_mostrar_errores_sintacticos:any=[];
 public static listaTXT:any = [];
 public static guarda_entrada:any = ""; 
+public static lista_mostrar_tabla_simbolos:any = [];
 
 public static guarda_traduccion:string = ""; 
 public static guarda_cadena_html:string = ""; 
 public static guarda_cadena_json:string = ""; 
+
 }

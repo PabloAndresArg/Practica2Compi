@@ -102,6 +102,24 @@ export class Token{ // si falla implementar el '?'
       return this.columna;
   }
 
+  public getParaTabla():string{
+      switch(this.Tipo_token){
+            case Tipo.p_res_Int:
+                 return "int";
+            case Tipo.p_res_Char:
+                return "char";
+            case Tipo.p_res_String:
+                return "string";
+          
+            case Tipo.p_res_Bool:
+                return "Bool";
+
+            case Tipo.p_res_double:
+                return"Double";
+            default:
+                return"any";
+      }
+  }
 
   public  getTipo_str():string
   {
@@ -180,7 +198,7 @@ export class Token{ // si falla implementar el '?'
       case Tipo.p_res_String:
           return "Palabra Reservada String";
       case Tipo.p_res_while:
-          return "Palabra Reservada Int";
+          return "Palabra Reservada While";
       case Tipo.p_res_Bool:
           return "Palabra Reservada Bool";
       case Tipo.p_res_Class:

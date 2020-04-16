@@ -85,8 +85,8 @@
   
   
      <!-- el modelo teine que ser de tipo entrada-->
-        <div class="carousel-item" *ngFor='let obj of listaTXT' > 
-          <textarea [(ngModel)] = "obj.cadena" class="d-block  justify-content-center">
+        <div class="carousel-item acomodaTexAr" *ngFor='let obj of listaTXT' > 
+          <textarea [(ngModel)] = "obj.cadena" class="d-block  justify-content-center acomodaTexAr">
           
           </textarea>   
 
@@ -135,6 +135,7 @@
 id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer()" (change) = "restablecer()"
 [options]="{
  lineNumbers: true,
+ readOnly: 'nocursor',
  matchBrackets:true,
  styeleActiveLine:true,
  theme: 'dracula',
@@ -243,7 +244,25 @@ id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer
 
           
 
-
+<table class="table table-bordered col-8 tabl subir_tabla">
+  <thead>
+      <tr > 
+          <th colspan="3" class="tituloErr"> TABLA DE VARIABLES </th> 
+       </tr>
+    <tr>
+      <th scope="col">Nombre</th>
+      <th scope="col">Tipo</th>
+      <th scope="col">Linea</th>
+    </tr>
+  </thead>
+  <tbody>
+       <tr  *ngFor='let variable of tabla_sin' >
+         <th scope="row">{{variable.getNombre()}}</th>
+          <td>{{variable.getTipo()}}</td>
+          <td>{{variable.getFila()}}</td>
+        </tr>
+  </tbody>
+</table>
 
 
 
