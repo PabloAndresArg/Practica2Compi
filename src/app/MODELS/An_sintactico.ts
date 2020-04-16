@@ -2,6 +2,7 @@ import {ErroresSintacticos} from './ErroresSintacticos';
 import {Token, Tipo} from './Token';
 import {Tabla_Simbolos} from './Tabla_Simbolos';
 import { Estatico } from './Estatico';
+
 export class An_sintatico{
      // variables solo para el parea 
      private hay_error:boolean = false; 
@@ -25,6 +26,8 @@ export class An_sintatico{
   
     
     // ATRIBUTOS PARA TRADUCIR 
+    private INTERVALO1_:string="";
+    private INTERVALO2_:string="";
     private save_expression:boolean = false;
     private GUARDAR_EXPRESION :string="";
     private nombres_variables_declaracion:any=[];
@@ -202,14 +205,16 @@ export class An_sintatico{
 
     //--------------------> INSTRUCCIONES FIN  <---------------------
     private sentencia_switch():void{
-        this.esta_en_el_switch = true;
+        this.esta_en_el_switch = true;this.cadena_traducida+="def ";
         this.parea(Tipo.p_res_switch);
-        this.parea(Tipo.parentesis_izq); 
+        this.parea(Tipo.parentesis_izq);  this.cadena_traducida +="case,"
         this.parea(Tipo.id);
-        this.parea(Tipo.parentesis_derecho);
-        this.parea(Tipo.llave_izq); 
+        this.parea(Tipo.parentesis_derecho); this.cadena_traducida+=":";
+        this.parea(Tipo.llave_izq);
+        this.tab(); this.cadena_traducida += "switcher = {\n"; 
         this.ListaCases();  // PREGUNTAR SI EL RETURN FUNCIONARIA EN VEZ DE UN BREAK
         this.Default_();
+        this.tab(); this.cadena_traducida+= "}\n";
         this.parea(Tipo.llave_derecha);
         this.esta_en_el_switch = false;
     }
@@ -221,8 +226,8 @@ export class An_sintatico{
             this.parea(Tipo.p_res_default);
             this.parea(Tipo.dosPuntos); this.salto();
             this.Lista_inst();
-            this.tab();
-            this.parea(Tipo.p_res_break);
+            this.tab();this.Traducir = false;
+            this.parea(Tipo.p_res_break); this.Traducir = true;
             this.parea(Tipo.punto_y_coma);
         }
         else {
@@ -249,13 +254,12 @@ export class An_sintatico{
 
     }
     private caseP(){
-        this.tab();
-        this.parea(Tipo.p_res_case); 
+        this.tab(); this.Traducir = false;
+        this.parea(Tipo.p_res_case);  this.Traducir = true;
         this.opcionCase(); 
-        this.parea(Tipo.dosPuntos); this.salto();
-
+        this.parea(Tipo.dosPuntos); 
         this.contadorTab++;
-        this.Lista_inst();
+        this.Lista_inst(); this.tab(); this.cadena_traducida+=",";
         this.contadorTab--; //------->
         this.tab();
         this.parea(Tipo.p_res_break);
@@ -297,11 +301,23 @@ export class An_sintatico{
             this.expresion();
            // this.cadena_traducida+=this.intervalo1 +",";
         }else{
+            this.TipoActualVariable = this.tokenActual.getParaTabla(); // GUARDO EL TIPO 
             this.Tipo(); this.Traducir = true; this.cadena_traducida += " ";
+            let id:string = ""; 
+            id = this.tokenActual.getValor_lexema();
+            let fila:number = 0; 
+            fila = this.tokenActual.getFila();
             this.parea(Tipo.id);
             this.cadena_traducida+= " in range(" ;this.Traducir= false;
-            this.parea(Tipo.igual); this.guardarIntervalo = 1 ; 
-            this.expresion(); 
+            this.parea(Tipo.igual);
+            this.guardarIntervalo = 1 ;// interruptor para saber en donde guardar
+            this.GUARDAR_EXPRESION="";// LIMPIA 
+            this.save_expression = true;
+            this.expresion();
+            this.save_expression = false;
+            console.log("INTERVALO 1 "+id+" = "+ this.GUARDAR_EXPRESION);
+            this.INTERVALO1_  = this.GUARDAR_EXPRESION;
+            this.tabla.push(new Tabla_Simbolos(id,this.TipoActualVariable ,fila ,this.GUARDAR_EXPRESION )); // NOM , TIP , FIL , VAL
             // this.cadena_traducida+=this.intervalo1 +",";
         }
     }
@@ -434,13 +450,13 @@ export class An_sintatico{
              this.parea(Tipo.punto_y_coma);
              // PUNTO DE SEND CANDENA TRADUCIDA 
              this.setValorAsignacion();
-             this.imprimirTABLA();
+          //   this.imprimirTABLA();
              this.llenarListaTabla();
             }
     }
     public llenarListaTabla(){
         for (let x = 0; x <this.nombres_variables_declaracion.length; x++) {
-            let obj:Tabla_Simbolos = new Tabla_Simbolos(this.nombres_variables_declaracion[x].getNombre() , this.nombres_variables_declaracion[x].getTipo() , this.nombres_variables_declaracion[x].getFila()  , "");
+            let obj:Tabla_Simbolos = new Tabla_Simbolos(this.nombres_variables_declaracion[x].getNombre() , this.nombres_variables_declaracion[x].getTipo() , this.nombres_variables_declaracion[x].getFila()  , this.nombres_variables_declaracion[x].getValor());
             this.tabla.push(obj);
         } 
     }
@@ -462,7 +478,7 @@ export class An_sintatico{
     public imprimirTABLA_SEND(){
         console.log(" IMPRIMIENDO TABLA a MOSTRAR ");
         for (let x = 0; x < this.tabla.length; x++) {
-            console.log("VAR: " + this.tabla[x].getNombre() + " TIPO: " + this.tabla[x].getTipo() + " Fila " + this.tabla[x].getFila());
+            console.log("VAR: " + this.tabla[x].getNombre() + " TIPO: " + this.tabla[x].getTipo() + " Fila " + this.tabla[x].getFila() +"VALOR: "+this.tabla[x].getValor());
         }    
     }
     private Lista_ids(){
@@ -807,22 +823,27 @@ export class An_sintatico{
     }
 
     public definirRango_for(){ // numero , numero): saLTO DE LINEA
-        if(this.simboloComparativoFor == ">="){
-            // quiere decir que el primero es mas pequeño 
-            let num:number = parseInt( this.intervalo1)+1;
-            let num2:number = parseInt( this.intervalo2) + 1;
-            this.cadena_traducida+=num2+","+num+"):\n";
-        }else if (this.simboloComparativoFor == "<="){
-            let num:number = parseInt( this.intervalo1) + 1;
-            let num2:number = parseInt( this.intervalo2) + 1;
-            this.cadena_traducida+=num +","+num2+"):\n";
-        }else if (this.simboloComparativoFor == "<"){
-            let num:number = parseInt( this.intervalo1) + 1;
-            this.cadena_traducida+= num+","+ this.intervalo2+"):\n";
-        }else if (this.simboloComparativoFor == ">"){
-            let num2:number = parseInt( this.intervalo2) + 1;
-            this.cadena_traducida+=num2+","+this.intervalo1+"):\n";
+        if(this.la_cadena_son_solo_numeros(this.INTERVALO1_) == true && this.la_cadena_son_solo_numeros(this.INTERVALO2_) == true ){
+            if(this.simboloComparativoFor == ">="){
+                // quiere decir que el primero es mas pequeño 
+                let num:number = parseInt( this.intervalo1)+1;
+                let num2:number = parseInt( this.intervalo2) + 1;
+                this.cadena_traducida+=num2+","+num+"):\n";
+            }else if (this.simboloComparativoFor == "<="){
+                let num:number = parseInt( this.intervalo1) + 1;
+                let num2:number = parseInt( this.intervalo2) + 1;
+                this.cadena_traducida+=num +","+num2+"):\n";
+            }else if (this.simboloComparativoFor == "<"){
+                let num:number = parseInt( this.intervalo1) + 1;
+                this.cadena_traducida+= num+","+ this.intervalo2+"):\n";
+            }else if (this.simboloComparativoFor == ">"){
+                let num2:number = parseInt( this.intervalo2) + 1;
+                this.cadena_traducida+=num2+","+this.intervalo1+"):\n";
+            }
+        }else{
+            this.cadena_traducida+= this.INTERVALO1_+","+this.INTERVALO2_+"):\n";
         }
+
     }
 
     private simboloComparacionOpcional(){
@@ -835,41 +856,117 @@ export class An_sintatico{
         if (this.tokenActual.getTipo() == Tipo.igualComparacion)
         {             // simboloComparacionOpcional  -> == E
             this.parea(Tipo.igualComparacion);
-            this.E();
+            if(this.guardarIntervalo == 2){
+                this.GUARDAR_EXPRESION="";// LIMPIA 
+                this.save_expression = true;
+                this.E();
+                this.save_expression = false;
+                console.log("INTERVALO 2 == "+ this.GUARDAR_EXPRESION);
+                this.INTERVALO2_ = this.GUARDAR_EXPRESION;
+             }else{
+                this.E();
+             }    
 
         }
         else if (this.tokenActual.getTipo() == Tipo.mayor_que)
         {             // simboloComparacionOpcional  -> > E
             this.parea(Tipo.mayor_que);
-            this.E();
+            if(this.guardarIntervalo == 2){
+                this.GUARDAR_EXPRESION="";// LIMPIA 
+                this.save_expression = true;
+                this.E();
+                this.save_expression = false;
+                console.log("INTERVALO 2 > "+ this.GUARDAR_EXPRESION);
+                this.INTERVALO2_ = this.GUARDAR_EXPRESION;
+             }else{
+                this.E();
+             }    
         }
         else if (this.tokenActual.getTipo() == Tipo.menor_que)
         {
             this.parea(Tipo.menor_que);
-            this.E();
+            if(this.guardarIntervalo == 2){
+                this.GUARDAR_EXPRESION="";// LIMPIA 
+                this.save_expression = true;
+                this.E();
+                this.save_expression = false;
+                console.log("INTERVALO 2 < "+ this.GUARDAR_EXPRESION);
+                this.INTERVALO2_ = this.GUARDAR_EXPRESION;
+             }else{
+                this.E();
+             }    
         }
         else if (this.tokenActual.getTipo() == Tipo.menor_o_igual)
         { 
             this.parea(Tipo.menor_o_igual);
-            this.E();
+            if(this.guardarIntervalo == 2){
+                this.GUARDAR_EXPRESION="";// LIMPIA 
+                this.save_expression = true;
+                this.E();
+                this.save_expression = false;
+                console.log("INTERVALO 2 <= "+ this.GUARDAR_EXPRESION);
+                this.INTERVALO2_ = this.GUARDAR_EXPRESION;
+             }else{
+                this.E();
+             }    
         }
         else if (this.tokenActual.getTipo() == Tipo.mayor_o_igual)
         {             // simboloComparacionOpcional  ->   >= E
             this.parea(Tipo.mayor_o_igual);
-            this.E();
+            if(this.guardarIntervalo == 2){
+                this.GUARDAR_EXPRESION="";// LIMPIA 
+                this.save_expression = true;
+                this.E();
+                this.save_expression = false;
+                console.log("INTERVALO 2 >= "+ this.GUARDAR_EXPRESION);
+                this.INTERVALO2_ = this.GUARDAR_EXPRESION;
+             }else{
+                this.E();
+             }    
         }
         else if (this.tokenActual.getTipo() == Tipo.diferente)
         {             // simboloComparacionOpcional  ->   != E
             this.parea(Tipo.diferente);
-            this.E();
+            if(this.guardarIntervalo == 2){
+                this.GUARDAR_EXPRESION="";// LIMPIA 
+                this.save_expression = true;
+                this.E();
+                this.save_expression = false;
+                console.log("INTERVALO 2 != "+ this.GUARDAR_EXPRESION);
+                this.INTERVALO2_ = this.GUARDAR_EXPRESION;
+             }else{
+                this.E();
+             }    
         }
         else
         {
             // simboloComparacionOpcional  -> -EPSILON
         }
     } 
+    public la_cadena_son_solo_numeros(intervaloN:string):boolean{
+        console.log("***********************************************");
+        console.log("Revisando el intervalo: " + intervaloN);
+        for (let i = 0; i < intervaloN.length; i++) {
+            let caracter:any = intervaloN[i];
+              if(this.esDigito(caracter)){
 
+              }else{
+                  console.log("NO es un numero");
+                  console.log("***********************************************");
 
+                  return false;
+              }
+        }
+        console.log("SI es un numero");
+        console.log("***********************************************");
+
+        return true; 
+    }
+
+    public esDigito (caracter){
+        let ascii = caracter.charCodeAt(0);
+        return ascii > 47 && ascii < 58;
+    }
 
    
     private parea(tip : Tipo):void{
