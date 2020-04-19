@@ -26,6 +26,7 @@ export class An_sintatico{
   
     
     // ATRIBUTOS PARA TRADUCIR 
+    
     private INTERVALO1_:string="";
     private INTERVALO2_:string="";
     private save_expression:boolean = false;
@@ -52,6 +53,10 @@ export class An_sintatico{
     public getListaErrores():any[]{
         return this.lista_errores_sin; 
     }
+    public getCADENA_HTML():string{
+        return this.cadena_html;
+    }
+    private cadena_html:string = "";
     // trabar al metodo cuando haya un error y esperar a que llegue a un punto y coma
     // luego seguir analizando como si  nada 
     constructor(tokens:any[]){
@@ -66,7 +71,7 @@ export class An_sintatico{
     this.tomarLLaves = false;
     // LISTO PARA INICIAR EL SINTACTICO 
     console.log("INICIA A ANALIZAR");
-
+    this.ignoraComentarios();
     this.inicio();
 
     console.log("TERMINO DE ANALIZAR");
@@ -75,6 +80,8 @@ export class An_sintatico{
     }else{
         console.log("ESA ONDA TIENE ERROES SINTACTICOS");
     }
+
+  
    this.imprimirTABLA_SEND();
  
     }
@@ -85,6 +92,7 @@ export class An_sintatico{
         this.parea(Tipo.sharp);
     }
     private lista_clasesP(){
+        this.ignoraComentarios();
         if(this.tokenActual.getTipo() == Tipo.p_res_Class){
             this.sentencia_clase();
             this.lista_clasesP();
@@ -99,9 +107,30 @@ export class An_sintatico{
         this.parea(Tipo.id);
         this.parea(Tipo.llave_izq);this.tomarLLaves= true;
         this.Traducir = true;
-        this.Lista_inst();
+        this.Lista_Declaraciones_metFunVar();
         this.Traducir = false;this.tomarLLaves= false;
         this.parea(Tipo.llave_derecha);
+
+    }
+    private Lista_Declaraciones_metFunVar(){
+        //Declaracion Lista_Declaraciones_metFunVarP
+        this.ignoraComentarios();
+        if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool || this.tokenActual.getTipo() == Tipo.p_res_void){
+            this.Declaracion(); 
+            this.Lista_Declaraciones_metFunVarP();
+        }else{
+            // epsilon 
+        }
+     
+    }
+    private Lista_Declaraciones_metFunVarP(){
+        this.ignoraComentarios();
+        if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool || this.tokenActual.getTipo() == Tipo.p_res_void){
+            this.Declaracion(); 
+            this.Lista_Declaraciones_metFunVarP();
+        }else{
+            // epsilon 
+        }
 
     }
     private Lista_inst(){
@@ -125,9 +154,9 @@ export class An_sintatico{
         }else if(this.tokenActual.getTipo() == Tipo.id ){
             this.tab(); 
             this.asignacionSimple();
-        }else if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool || this.tokenActual.getTipo() == Tipo.p_res_void){
+        }else if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool){
             this.tab(); 
-            this.Declaracion();
+            this.DECLARACION_ADENTRO_DE_METODOS_FUNCIONES();
         }else if(this.tokenActual.getTipo() == Tipo.p_res_while){
             this.tab();
             this.sentencia_while();
@@ -170,7 +199,7 @@ export class An_sintatico{
         }else if(this.tokenActual.getTipo() == Tipo.id ){
             this.Instruccion();
             this.Lista_instP();
-        }else if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool || this.tokenActual.getTipo() == Tipo.p_res_void){
+        }else if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool){
             this.Instruccion();
             this.Lista_instP();  
         }else if(this.tokenActual.getTipo() == Tipo.p_res_while){
@@ -204,6 +233,29 @@ export class An_sintatico{
     }
 
     //--------------------> INSTRUCCIONES FIN  <---------------------
+     /*   DECLARACION_ADENTRO_DE_METODOS_FUNCIONES-> tipo ID DeclaracionP_metodos
+    DeclaracionP_metodos -> Lista_ids asignacion ";"*/
+    private DECLARACION_ADENTRO_DE_METODOS_FUNCIONES(){
+        this.vaciarVariables()//VACIA CONTENEDOR AUX 
+        this.TipoActualVariable = this.tokenActual.getParaTabla();
+        this.Tipo(); 
+        this.nombreVar = this.tokenActual.getValor_lexema();
+        this.nombres_variables_declaracion.push(new Tabla_Simbolos(this.tokenActual.getValor_lexema(),this.TipoActualVariable , this.tokenActual.getFila(), this.getValorPorDefecto(this.TipoActualVariable))); // NOM , TIP , FIL , VAL
+        this.Traducir = false;
+        this.parea(Tipo.id);
+        this.Traducir = true;
+        this.DeclaracionP_metodos();
+    }
+    private DeclaracionP_metodos(){
+        this.Lista_ids();
+        this.asignacion();
+        this.parea(Tipo.punto_y_coma);
+        // PUNTO DE SEND CANDENA TRADUCIDA 
+        this.setValorAsignacion();
+     //   this.imprimirTABLA();
+        this.llenarListaTabla();
+    }
+
     private sentencia_switch():void{
         this.esta_en_el_switch = true;this.cadena_traducida+="def ";
         this.parea(Tipo.p_res_switch);
@@ -211,10 +263,10 @@ export class An_sintatico{
         this.parea(Tipo.id);
         this.parea(Tipo.parentesis_derecho); this.cadena_traducida+=":";
         this.parea(Tipo.llave_izq);
-        this.tab(); this.cadena_traducida += "switcher = {\n"; 
+        this.tab(); this.cadena_traducida += "switcher = {\n"; this.contadorTab++;
         this.ListaCases();  // PREGUNTAR SI EL RETURN FUNCIONARIA EN VEZ DE UN BREAK
         this.Default_();
-        this.tab(); this.cadena_traducida+= "}\n";
+        this.tab(); this.cadena_traducida+= "}\n";this.contadorTab--;
         this.parea(Tipo.llave_derecha);
         this.esta_en_el_switch = false;
     }
@@ -225,9 +277,9 @@ export class An_sintatico{
             this.tab();
             this.parea(Tipo.p_res_default);
             this.parea(Tipo.dosPuntos); this.salto();
-            this.Lista_inst();
-            this.tab();this.Traducir = false;
-            this.parea(Tipo.p_res_break); this.Traducir = true;
+            this.Lista_inst(); 
+            this.tab(); 
+            this.parea(Tipo.p_res_break);this.cadena_traducida+=",";
             this.parea(Tipo.punto_y_coma);
         }
         else {
@@ -257,12 +309,10 @@ export class An_sintatico{
         this.tab(); this.Traducir = false;
         this.parea(Tipo.p_res_case);  this.Traducir = true;
         this.opcionCase(); 
-        this.parea(Tipo.dosPuntos); 
-        this.contadorTab++;
-        this.Lista_inst(); this.tab(); this.cadena_traducida+=",";
-        this.contadorTab--; //------->
-        this.tab();
-        this.parea(Tipo.p_res_break);
+        this.parea(Tipo.dosPuntos); this.cadena_traducida+="\n";
+        this.Lista_inst(); 
+        this.tab(); 
+        this.parea(Tipo.p_res_break);this.cadena_traducida+=",";
         this.parea(Tipo.punto_y_coma);
     }
     private  opcionCase() {
@@ -369,7 +419,7 @@ export class An_sintatico{
             this.Tipo(); 
             this.nombreVar = this.tokenActual.getValor_lexema();
             this.nombres_variables_declaracion.push(new Tabla_Simbolos(this.tokenActual.getValor_lexema(),this.TipoActualVariable , this.tokenActual.getFila(), this.getValorPorDefecto(this.TipoActualVariable))); // NOM , TIP , FIL , VAL
-            this.Traducir = false;
+            this.Traducir = false; 
             this.parea(Tipo.id);
             this.Traducir = true;
             this.DeclaracionP();
@@ -382,9 +432,8 @@ export class An_sintatico{
     public imprimirTABLA(){
         console.log("-------IMPRIMIENDO TABLA-------");
         for (let x = 0; x <this.nombres_variables_declaracion.length; x++) {
-            console.log("VARIABLE " + this.nombres_variables_declaracion[x].getNombre() + " TIPO: " + this.nombres_variables_declaracion[x].getTipo() + " Fila " + this.nombres_variables_declaracion[x].getFila());
+            console.log("VARIABLE " + this.nombres_variables_declaracion[x].getNombre() + " TIPO: " + this.nombres_variables_declaracion[x].getTipo() + " Fila " + this.nombres_variables_declaracion[x].getFila() );
         }
-        console.log("-------IMPRIMIENDO TABLA-------");
     }
     public getValorPorDefecto(tipo:string):string{
         if(tipo == "int"){// SI CAMBIO ALGO ACA TENGO QUE CAMBIARLO TAMBIEN EN TOKEN 
@@ -464,13 +513,13 @@ export class An_sintatico{
         if(this.GUARDAR_EXPRESION =="NO"){
             for (let x = 0; x <this.nombres_variables_declaracion.length; x++) {
                 this.tab();
-                this.cadena_traducida+= this.nombres_variables_declaracion[x].getNombre() +" = " +this.nombres_variables_declaracion[x].getValor() +"\n";
+                this.cadena_traducida+="var " +this.nombres_variables_declaracion[x].getNombre() +" = " +this.nombres_variables_declaracion[x].getValor() +"\n";
             }
              
         }else{
             for (let x = 0; x <this.nombres_variables_declaracion.length; x++) {
                 this.tab();
-                this.cadena_traducida+= this.nombres_variables_declaracion[x].getNombre() +" = " +this.GUARDAR_EXPRESION +"\n";
+                this.cadena_traducida+="var " + this.nombres_variables_declaracion[x].getNombre() +" = " +this.GUARDAR_EXPRESION +"\n";
             } 
            
         }
@@ -478,7 +527,7 @@ export class An_sintatico{
     public imprimirTABLA_SEND(){
         console.log(" IMPRIMIENDO TABLA a MOSTRAR ");
         for (let x = 0; x < this.tabla.length; x++) {
-            console.log("VAR: " + this.tabla[x].getNombre() + " TIPO: " + this.tabla[x].getTipo() + " Fila " + this.tabla[x].getFila() +"VALOR: "+this.tabla[x].getValor());
+            console.log("VAR: " + this.tabla[x].getNombre() + " TIPO: " + this.tabla[x].getTipo() + " Fila " + this.tabla[x].getFila() +" VALOR: "+this.tabla[x].getValor());
         }    
     }
     private Lista_ids(){
@@ -786,12 +835,20 @@ export class An_sintatico{
         else if (this.tokenActual.getTipo() == Tipo.caracter)
         {
             // caracter 
+ 
             this.parea(Tipo.caracter);
         }
         else if(this.tokenActual.getTipo() == Tipo.sb_negacion){
             this.Traducir= false;
             this.parea(Tipo.sb_negacion);this.cadena_traducida +=" not "; this.Traducir= true;
             this.E();
+        }else if(this.viene_de_sentencia_imprimir == true && this.tokenActual.getTipo() == Tipo.html){
+                let cad_temporal = this.tokenActual.getValor_lexema();
+                for(let k = 1 ; k< cad_temporal.length-1 ; k++){
+                    this.cadena_html+=cad_temporal[k];
+                }
+                
+                this.parea(Tipo.html);
         }
         else 
         {
@@ -1059,19 +1116,18 @@ private ignoraComentarios():void {
         this.cadena_traducida += traducida_comLinea;
         this.cadena_traducida += "\n";
         }else if(this.tokenActual.getTipo() == Tipo.comentarioBloques){
-       this.tab();
+        this.tab(); this.cadena_traducida+="\'" + "" + "\'" + "" + "\'"; this.salto();
         let cadena:string = this.tokenActual.getValor_lexema();
-        let traducida_comBlock:string =""; 
-        traducida_comBlock+=  "\'" + "" + "\'" + "" + "\'";
-        for (let X = 3; X < cadena.length -2; X++) {
-            traducida_comBlock += cadena[X];
-            if(cadena[X] == "\n"){
-                console.log("SALTA en " + cadena[X-2]);              
-                this.tab();
+        this.tab();
+        cadena = cadena.trim();
+        for (let X = 2; X < cadena.length -2; X++) {
+            this.cadena_traducida += cadena[X];
+            if(cadena[X] == "\n"){           
+               this.tab(); //hacer un this tab para cadena bloque 
             }
         }
-        traducida_comBlock+=  "\'" + "" + "\'" + "" + "\'";
-        this.cadena_traducida+=traducida_comBlock;
+        this.salto();
+        this.tab();this.cadena_traducida+="\'" + "" + "\'" + "" + "\'"; this.salto();
         this.cadena_traducida += "\n";
         }
         this.sig++;
@@ -1216,6 +1272,8 @@ case Tipo.p_res_do:
     return "Palabra Reservada do";
 case Tipo.p_res_double:
     return"Palabra Reservada double";
+case Tipo.html:
+    return "Cadena HTML";
 
     default:
         console.log("ERROR NO RECONOCIDO");

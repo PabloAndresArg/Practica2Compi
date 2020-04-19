@@ -1,13 +1,22 @@
+Inicio -> sentencia_clase lista_clasesP  "sharp"
+lista_clasesP -> sentencia_clase lista_clasesP
+				| epsilon
+
+sentencia_clase -> "P_Class" "ID" "{" Lista_Declaraciones_metFunVar   "}"
+
+Lista_Declaraciones_metFunVar-> Declaracion Lista_Declaraciones_metFunVarP
+								|epsilon // puede venir solo la clase sin ninguna declaracion 
+Lista_Declaraciones_metFunVarP-> Declaracion Lista_Declaraciones_metFunVarP
+								| epsilon
+							   
 
 
-
-Inicio -> P_Class ID "{" Lista_inst  "}"
 Lista_inst -> Instruccion Lista_inst'
 Lista_inst'-> Instruccion Lista_inst'
 			|epsilon
 
 
-Instruccion->  Declaracion                // YA
+Instruccion->  DECLARACION_ADENTRO_DE_METODOS_FUNCIONES             // YA
  			  |Sentencia_while			  // YA 
  			  |Sentencia_for			  //YA
  			  |SentenciaImprime		      // YA 
@@ -36,6 +45,13 @@ lista_parametros -> ","  Tipo ID  lista_parametros
 			| epsilon
 
 
+
+DECLARACION_ADENTRO_DE_METODOS_FUNCIONES-> tipo ID DeclaracionP_metodos
+										
+DeclaracionP_metodos -> Lista_ids asignacion ";"
+			 
+
+
 // en el void activo la bool de metodo 
 Declaracion-> p_res_void ID  "(" opcionMetodoFuncion
 			| tipo ID DeclaracionP
@@ -56,11 +72,7 @@ asignacionSimple -> ID OpcionAsignacion
 OpcionAsignacion->  "="  expresion ";"
 				  | "(" sentencia_llama_metodo ";"
 
-sentencia_llama_metodo -> Tipo ID  lista_parametros ")" 
-					| ")" 
 
-sentencia_llama_metodo -> ")" 
-					|  ListaExpresiones ")"
 
 
 
@@ -177,3 +189,9 @@ ExpresionMetodo -> "(" sentencia_llama_metodo
 					| epsilon
 sentencia_llama_metodo -> ListaExpresiones ")"
 					| ")" 
+
+sentencia_llama_metodo -> Tipo ID  lista_parametros ")" 
+					| ")" 
+
+sentencia_llama_metodo -> ")" 
+					|  ListaExpresiones ")"

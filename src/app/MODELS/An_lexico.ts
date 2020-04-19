@@ -251,7 +251,14 @@ export class An_lexico{
                 }
                 else
                 {
-                    this.aux_lexico += act; this.addToken(Tipo.caracter);
+                   
+                    this.aux_lexico += act; 
+                    if(this.aux_lexico.length <= 3){
+                        this.addToken(Tipo.caracter);
+                    }else{
+                        this.addToken(Tipo.html);
+                    }
+                
                 }
                 break;
             case 17:

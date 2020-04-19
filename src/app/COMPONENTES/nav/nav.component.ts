@@ -8,6 +8,7 @@ import{Router} from '@angular/router';
 import {ErrorLexico} from '../../MODELS/ErrorLexico';
 import {ErroresSintacticos} from '../../MODELS/ErroresSintacticos';
 import { An_sintatico } from 'src/app/MODELS/An_sintactico';
+import {formateaHTML} from '../../MODELS/formateaHTML'
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
@@ -80,6 +81,15 @@ export class NavComponent implements OnInit {
       this.traduce(llama_sintactico.getCADENATRADUCIDA());
       Estatico.lista_mostrar_tabla_simbolos = llama_sintactico.getTablaSIMBOLOS();
       this.tabla_sin =  Estatico.lista_mostrar_tabla_simbolos ;
+      this.guarda_cadena_html = llama_sintactico.getCADENA_HTML();
+      this.cadena_html.cadena =  this.guarda_cadena_html;
+
+      let llama_formato:formateaHTML = new formateaHTML(this.guarda_cadena_html);
+      this.guarda_cadena_html = llama_formato.getNuevaCadena();
+      this.cadena_html.cadena =  llama_formato.getNuevaCadena();
+      this.guarda_cadena_json = llama_formato.getCADENA_JSON();
+      this.cadena_json.cadena = llama_formato.getCADENA_JSON();
+
     }else{
       alert("LA ENTRADA POSEE ERRORES");
       this.guarda_traduccion = "";
@@ -112,6 +122,17 @@ export class NavComponent implements OnInit {
       this.traduce(llama_sintactico.getCADENATRADUCIDA());
       Estatico.lista_mostrar_tabla_simbolos = llama_sintactico.getTablaSIMBOLOS();
       this.tabla_sin =  Estatico.lista_mostrar_tabla_simbolos ;
+      this.guarda_cadena_html = llama_sintactico.getCADENA_HTML();
+      this.cadena_html.cadena =  this.guarda_cadena_html;
+
+      
+      let llama_formato:formateaHTML = new formateaHTML(this.guarda_cadena_html);
+      this.guarda_cadena_html = llama_formato.getNuevaCadena();
+      this.cadena_html.cadena =  llama_formato.getNuevaCadena();
+      this.guarda_cadena_json = llama_formato.getCADENA_JSON();
+      this.cadena_json.cadena = llama_formato.getCADENA_JSON();
+
+
     }else{
       alert("LA ENTRADA POSEE ERRORES");
       this.guarda_traduccion = "";

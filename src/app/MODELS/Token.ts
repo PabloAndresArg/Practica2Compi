@@ -59,7 +59,8 @@ export enum Tipo {
     sb_or,
     sb_negacion, 
     p_res_do,
-    p_res_double
+    p_res_double,
+    html
 }
 export class Token{ // si falla implementar el '?' 
   public static CONTADORTOKEN : number = 1; // cada vez que le de analizar regresa a 0 
@@ -249,6 +250,8 @@ export class Token{ // si falla implementar el '?'
           return "Palabra Reservada do";
       case Tipo.p_res_double:
           return"Palabra Reservada double";
+      case Tipo.html:
+           return "Cadena HTML";
       default:
          return "FALTO ESPECIFICAR";// ME AVISA SI HAY UNO QUE ME FALTO REGISTRAR EN MI CLASE ENUM
 
