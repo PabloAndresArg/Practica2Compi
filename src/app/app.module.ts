@@ -11,6 +11,7 @@ import { RegresoComponent } from './COMPONENTES/regreso/regreso.component';
 
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +25,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
     AppRoutingModule,
     FormsModule,
     CodemirrorModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

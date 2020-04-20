@@ -8,7 +8,11 @@ import{Router} from '@angular/router';
 import {ErrorLexico} from '../../MODELS/ErrorLexico';
 import {ErroresSintacticos} from '../../MODELS/ErroresSintacticos';
 import { An_sintatico } from 'src/app/MODELS/An_sintactico';
-import {formateaHTML} from '../../MODELS/formateaHTML'
+import {formateaHTML} from '../../MODELS/formateaHTML';
+
+
+
+
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
@@ -175,6 +179,11 @@ export class NavComponent implements OnInit {
     
   }
 
+  guardar(){
+    var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
+  //  FileSaver.saveAs(blob, "PRUEBA.txt");
+    alert("GUARDADO EXITOSO");
+  }
 
 
 

@@ -1,0 +1,23 @@
+{
+  "name": "practica_2",
+  "description": "compiladores 1",
+  "main": "main.ts",
+  "authors": [
+    "PabloAndresArg <PabloAndresArg@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "201800464"
+  ],
+  "homepage": "https://github.com/PabloAndresArg/Practica2Compi",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-file-saver": "^1.1.3"
+  }
+}
