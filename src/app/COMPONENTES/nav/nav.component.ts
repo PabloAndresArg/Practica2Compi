@@ -174,8 +174,8 @@ export class NavComponent implements OnInit {
     
   restablecer(){
     this.cadena_traducir.cadena = this.guarda_traduccion;
-    this.cadena_html.cadena = "HTML SIN MODIFICAR"; // DARLES SUS THIS DE CADA CADENA 
-    this.cadena_json.cadena = "JSON SIN MODIFICACIONES";
+    this.cadena_html.cadena = this.guarda_cadena_html; // DARLES SUS THIS DE CADA CADENA 
+    this.cadena_json.cadena = this.guarda_cadena_json;
     
   }
 

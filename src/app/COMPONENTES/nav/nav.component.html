@@ -198,7 +198,7 @@ id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer
 
         <div class="carousel-item">
 
-          <textarea id="J_son" [(ngModel)] = "cadena_json.cadena" class="d-block justify-content-center" >
+          <textarea id="J_son" [(ngModel)] = "cadena_json.cadena" class="d-block justify-content-center" (change) = "restablecer()">
            MUESTRA JSON 
           </textarea>   
         

@@ -68,7 +68,7 @@ export class An_sintatico{
     this.sig = 0 ; 
     this.tokenActual = this.listaTok[this.sig];
     //tokenActual = listaTok.ElementAt(sig);
-    this.tomarLLaves = false;
+    this.tomarLLaves = true;
     // LISTO PARA INICIAR EL SINTACTICO 
     console.log("INICIA A ANALIZAR");
     this.ignoraComentarios();
@@ -102,15 +102,13 @@ export class An_sintatico{
      
     }
     private sentencia_clase(){
-
-        this.parea(Tipo.p_res_Class);
-        this.parea(Tipo.id);
-        this.parea(Tipo.llave_izq);this.tomarLLaves= true;
         this.Traducir = true;
+        this.parea(Tipo.p_res_Class); this.cadena_traducida+=" ";
+        this.parea(Tipo.id);
+        this.parea(Tipo.llave_izq);
         this.Lista_Declaraciones_metFunVar();
-        this.Traducir = false;this.tomarLLaves= false;
         this.parea(Tipo.llave_derecha);
-
+        this.Traducir = false;
     }
     private Lista_Declaraciones_metFunVar(){
         //Declaracion Lista_Declaraciones_metFunVarP
@@ -405,6 +403,7 @@ export class An_sintatico{
         if(this.tokenActual.getTipo() == Tipo.p_res_void){
             
           this.parea(Tipo.p_res_void);this.Traducir = true;this.acepta_return_metodos = true; 
+          this.tab();
            this.cadena_traducida += "def ";
             if(this.tokenActual.getValor_lexema() == "main"){
                 this.esElMain = true;
@@ -490,7 +489,7 @@ export class An_sintatico{
     private DeclaracionP(){
         this.ignoraComentarios();
         if(this.tokenActual.getTipo() == Tipo.parentesis_izq){
-            this.cadena_traducida+="def "+ this.nombreVar;
+            this.tab();this.cadena_traducida+="def "+ this.nombreVar;
             this.parea(Tipo.parentesis_izq);this.acepta_return_funciones = true;
             this.opcionMetodoFuncion();
         }else{
@@ -1190,7 +1189,7 @@ switch (tip) {
 
     case Tipo.punto_y_coma:
         return "Punto_y_coma";
-case Tipo.corchete_derecho:
+    case Tipo.corchete_derecho:
     return "Corchete Derecho";
 case Tipo.igualComparacion:
     return "igual comparacion";

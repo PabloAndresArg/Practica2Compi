@@ -14,6 +14,7 @@ export class formateaHTML{
     // PARA TRADUCIR EL JSON 
     private ID_PURO:boolean= true; 
     private atributo_actual:string = ""; 
+    private ES_BR:boolean;
     constructor(cadena_html:string){
         this.contadorTab = 0 ; 
         this.nuevaCadena = cadena_html;
@@ -127,6 +128,7 @@ export class formateaHTML{
                         this.aux_lexico ="";
                         this.cadenajson += "\n";
                         this.aux_lexico += "\"";
+                        this.ES_BR = false;
                         this.estado = 1; 
                     }else{
                             this.aux_lexico += this.cadenaVieja[i]; 
@@ -149,13 +151,18 @@ export class formateaHTML{
                     this.aux_lexico += this.cadenaVieja[i]; // ES UNA LETRA "A"
                     this.estado = 2 ;
                     let atributo:string = this.getAtributo_etiqueta(i);
-                   
                     if(atributo[0] == "\""){
                         console.log("si es un atributo");
                         this.atributo_actual = atributo;
                     }else{
+                        console.log("VIENE-" + atributo );
                         this.atributo_actual  = ""; 
                     }
+                    if(atributo[0] == "b" || atributo[0] == "B" ){
+                        this.ES_BR = true;
+                        console.log("VIENE BR "  + atributo);
+                    }
+                    
                     this.ID_PURO = true;
                     this.contadorTab++;
                     this.t_();   
@@ -180,7 +187,10 @@ export class formateaHTML{
                     if(this.atributo_actual.length != 0 ){
                     this.t_();  this.cadenajson+="\"STYLE\":"+this.atributo_actual+"\n";
                     }
-                    this.estado = 0; 
+                    this.estado = 0;
+                    if(this.ES_BR == true){
+                        this.t_();   this.cadenajson+="}\n";
+                    } 
                 }else{ // viene el puro id   
                     
                     if(act == " "){
@@ -233,18 +243,18 @@ export class formateaHTML{
     // ESTO SERIA PARA PONERLE LAS COMILLAS 
 
     private getSig(i:number): string{
-        console.log("________________________________________________________________________________");
+      //  console.log("________________________________________________________________________________");
         let k:number = 0 ; 
-        console.log("ACTUAL: " + this.cadenajson[i]);
+      //  console.log("ACTUAL: " + this.cadenajson[i]);
         let sig:string = this.cadenajson[i+1];
         while (sig ==" "|| sig =="\n" || sig =="\t" || sig=="\r")
         {
             k++;
             sig = this.cadenajson[i + k];
-            console.log("Temp sigueinte:" + sig);
+        //    console.log("Temp sigueinte:" + sig);
         }
-        console.log("siguiente definitivo:" + sig);
-        console.log("________________________________________________________________________________");
+       // console.log("siguiente definitivo:" + sig);
+      //  console.log("________________________________________________________________________________");
         return sig;
     }
 
