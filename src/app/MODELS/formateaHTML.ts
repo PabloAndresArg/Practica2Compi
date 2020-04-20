@@ -1,3 +1,4 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 export class formateaHTML{
@@ -52,6 +53,7 @@ export class formateaHTML{
                         this.nuevaCadena += "\n";
                         this.aux_lexico += this.cadenaVieja[i];
                         this.estado = 1; 
+                        this.ES_BR = false;
                     }else{
 
                         this.aux_lexico += this.cadenaVieja[i];
@@ -73,6 +75,10 @@ export class formateaHTML{
                 }else{
                     this.aux_lexico += this.cadenaVieja[i];
                     this.estado = 2 ; 
+                    let atributo:string = this.getAtributo_etiqueta(i);
+                    if(atributo[0] == "b" || atributo[0] == "B" ){
+                        this.ES_BR = true;
+                    }
                     this.contadorTab++;
                     this.tab();   
                     this.nuevaCadena += this.aux_lexico; // adjunta 
@@ -86,6 +92,12 @@ export class formateaHTML{
                     this.nuevaCadena += this.cadenaVieja[i];
                     this.nuevaCadena+="\n";
                     this.estado = 0; 
+
+                    if(this.ES_BR == true){
+                       this.contadorTab--;
+                    } 
+
+
                 }else{ // viene el puro id        
                      this.nuevaCadena += this.cadenaVieja[i];
                 }
@@ -189,7 +201,7 @@ export class formateaHTML{
                     }
                     this.estado = 0;
                     if(this.ES_BR == true){
-                        this.t_();   this.cadenajson+="}\n";
+                        this.t_();   this.cadenajson+="}\n"; this.contadorTab--;
                     } 
                 }else{ // viene el puro id   
                     
@@ -285,7 +297,7 @@ export class formateaHTML{
     public addCOMILLAS_AL_JSON(){
         let nueva_cadena_json_con_comillas:string="";
         let actual:string = "";
-        for(let indice = 0 ; indice < this.cadenajson.length-1 ; indice++){
+        for(let indice = 0 ; indice < this.cadenajson.length ; indice++){
             actual = this.cadenajson[indice]; 
 
 

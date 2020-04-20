@@ -22,7 +22,7 @@
             </li>
                            
             <li class="nav-item">
-              <button class = "nav-link btn  " onClick = "guardar()">
+              <button class = "nav-link btn  " (click) = "GUARDA_ARCHIVO()">
                 <p> REPORTES <i class="fa fa-clone" aria-hidden="true"></i>    </p>
               </button>
             </li>
@@ -245,6 +245,9 @@ id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer
 
 
 
+
+
+
   
 
           
@@ -275,3 +278,6 @@ id = "traductor"   [(ngModel)] = "cadena_traducir.cadena" (focus) = "restablecer
 
 
 
+<button class = "btn btn-primary save_" (click) = "SA_VE()">
+  <p>SAVE</p>
+</button>

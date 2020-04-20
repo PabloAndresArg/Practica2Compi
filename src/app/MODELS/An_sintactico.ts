@@ -104,7 +104,7 @@ export class An_sintatico{
     private sentencia_clase(){
         this.Traducir = true;
         this.parea(Tipo.p_res_Class); this.cadena_traducida+=" ";
-        this.parea(Tipo.id);
+        this.parea(Tipo.id); this.cadena_traducida+=":";
         this.parea(Tipo.llave_izq);
         this.Lista_Declaraciones_metFunVar();
         this.parea(Tipo.llave_derecha);

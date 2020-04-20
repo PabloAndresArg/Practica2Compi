@@ -10,7 +10,8 @@ import {ErroresSintacticos} from '../../MODELS/ErroresSintacticos';
 import { An_sintatico } from 'src/app/MODELS/An_sintactico';
 import {formateaHTML} from '../../MODELS/formateaHTML';
 
-
+import * as File_ from 'file-saver';
+import {saveAs} from 'file-saver';
 
 
 @Component({
@@ -179,11 +180,8 @@ export class NavComponent implements OnInit {
     
   }
 
-  guardar(){
-    var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
-  //  FileSaver.saveAs(blob, "PRUEBA.txt");
-    alert("GUARDADO EXITOSO");
-  }
+
+  
 
 
 
@@ -194,7 +192,24 @@ export class NavComponent implements OnInit {
     this.cadena_traducir.cadena = cadena_del_sintactico;
   }
   
+  GUARDA_ARCHIVO(){
+    let cadena__py:any = this.cadena_traducir.cadena;
+    let cadena__html:any = this.cadena_html.cadena; 
+    let cadena__json:any = this.cadena_json.cadena;
+    let data_py = new Blob([cadena__py], { type: "text/csv;charset=utf-8" });
+    let data_html = new Blob([cadena__html],{ type: "text/csv;charset=utf-8" });
+    let data_json = new Blob([cadena__json], { type: "text/csv;charset=utf-8" });
+    saveAs(data_py, "TRADUCCION.py");
+    saveAs(data_html, "CODIGO_HTML.html");
+    saveAs(data_json, "CODIGO_JSON.json");
+    alert("GENERANDO REPORTES...");
+  }
 
+  SA_VE(){
+    let c_sharp_entrada = new Blob([this.filestring], { type: "text/csv;charset=utf-8" });
+    saveAs(c_sharp_entrada, "Entrada_.cs");
+    alert("Entrada guardada correctamente");
+  }
 
 fileChanged(e) {
   this.file = e.target.files[0];
