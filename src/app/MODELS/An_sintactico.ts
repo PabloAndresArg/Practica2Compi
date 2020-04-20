@@ -114,17 +114,33 @@ export class An_sintatico{
     private Lista_Declaraciones_metFunVar(){
         //Declaracion Lista_Declaraciones_metFunVarP
         this.ignoraComentarios();
-        if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool || this.tokenActual.getTipo() == Tipo.p_res_void){
+        if(this.tokenActual.getTipo() == Tipo.llave_derecha){
+
+        }else{
             this.Declaracion(); 
             this.Lista_Declaraciones_metFunVarP();
-        }else{
-            // epsilon 
         }
+        /*  ACA NO ME RECONOCIA BIEN LOS ERRORES :v 
+               if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool || this.tokenActual.getTipo() == Tipo.p_res_void){
+            this.Declaracion(); 
+            this.Lista_Declaraciones_metFunVarP();
+        }
+        else{
+            // epsilon 
+        }*/
      
     }
     private Lista_Declaraciones_metFunVarP(){
         this.ignoraComentarios();
         if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool || this.tokenActual.getTipo() == Tipo.p_res_void){
+            this.Declaracion(); 
+            this.Lista_Declaraciones_metFunVarP();
+        }
+        else if ( (this.tokenActual.getTipo() == Tipo.punto_y_coma || this.tokenActual.getTipo() == Tipo.llave_derecha) && this.hay_error == true ) {
+            this.hay_error = false;
+            console.log("[HAMBITO DE CLASE ] SE RECUPERO CON EL SIMBOLO ; O }  EN LA FILA :"+this.tokenActual.getFila()+"   "+this.tokenActual.getValor_lexema());
+            this.sig++;
+            this.tokenActual = this.listaTok[this.sig];  
             this.Declaracion(); 
             this.Lista_Declaraciones_metFunVarP();
         }
