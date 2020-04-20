@@ -2,6 +2,7 @@ import {ErroresSintacticos} from './ErroresSintacticos';
 import {Token, Tipo} from './Token';
 import {Tabla_Simbolos} from './Tabla_Simbolos';
 import { Estatico } from './Estatico';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 export class An_sintatico{
      // variables solo para el parea 
@@ -126,7 +127,8 @@ export class An_sintatico{
         if(this.tokenActual.getTipo() == Tipo.p_res_Int || this.tokenActual.getTipo() == Tipo.p_res_double  || this.tokenActual.getTipo() == Tipo.p_res_Char || this.tokenActual.getTipo() == Tipo.p_res_String  || this.tokenActual.getTipo() == Tipo.p_res_Bool || this.tokenActual.getTipo() == Tipo.p_res_void){
             this.Declaracion(); 
             this.Lista_Declaraciones_metFunVarP();
-        }else{
+        }
+        else{
             // epsilon 
         }
 
@@ -138,15 +140,14 @@ export class An_sintatico{
 
     //----------------------------->>>>>>>>>>>>>> INIT INSTRUCCIONES 
 
-    private Instruccion(){ // TODAS LAS INSTRUCCIONES QUE PUEDO HACER 
+    private Instruccion(){ 
        
         this.ignoraComentarios(); 
 
-        if(this.tokenActual.getTipo() == Tipo.p_res_if){
-            // instruccion IF 
+        if(this.tokenActual.getTipo() == Tipo.p_res_if){// instruccion IF 
             this.tab(); 
             this.sentencia_if();
-        }else if(this.tokenActual.getTipo() == Tipo.p_Console){
+        }else if(this.tokenActual.getTipo() == Tipo.p_Console){// CONSOLE.WRITE
             this.tab(); 
             this.sentenciaImprime();
         }else if(this.tokenActual.getTipo() == Tipo.id ){
@@ -224,6 +225,17 @@ export class An_sintatico{
         }else if(this.tokenActual.getTipo() == Tipo.p_res_break && this.esta_en_el_switch == false && this.acepta_sentencia_break == true){
             this.Instruccion(); 
             this.Lista_instP();
+        }else if ( (this.tokenActual.getTipo() == Tipo.punto_y_coma || this.tokenActual.getTipo() == Tipo.llave_derecha) && this.hay_error == true ) {
+            this.hay_error = false;
+            console.log("[INSTRUCCION] SE RECUPERO CON EL SIMBOLO ; O }  EN LA FILA :"+this.tokenActual.getFila());
+            this.sig++;
+            this.tokenActual = this.listaTok[this.sig];  
+            this.Instruccion();
+            this.Lista_instP();
+        } else {
+           
+              // epsilon -----
+              
         }
 
 
@@ -289,13 +301,30 @@ export class An_sintatico{
         this.caseP();
         this.ListaCasesP();
     }
+
+    public recuperarDelError(){
+
+        if(this.hay_error == true && (this.tokenActual.getTipo() == Tipo.punto_y_coma || this.tokenActual.getTipo() == Tipo.llave_derecha  )){
+            this.hay_error = false; 
+            this.sig++;
+            this.tokenActual = this.listaTok[this.sig];
+
+        }
+    }
+
     private  ListaCasesP() {
         this.ignoraComentarios();
         if (this.tokenActual.getTipo() == Tipo.p_res_case)
         {
             this.caseP();
             this.ListaCasesP();
-        }
+        }else if (this.tokenActual.getTipo() != Tipo.llave_derecha  && this.tokenActual.getTipo() != Tipo.sharp && this.tokenActual.getTipo() != Tipo.p_res_default   ) {
+            console.log("[ListaCasesP] RECUPERACION -->  " + this.tokenActual.getValor_lexema()+"   EN FILA : "+this.tokenActual.getFila());
+            this.sig++;
+            this.tokenActual = this.listaTok[this.sig];
+            this.caseP();
+            this.ListaCasesP();
+          }
         else
         {
             // epsilon -----
@@ -1031,14 +1060,14 @@ export class An_sintatico{
     if(this.tokenActual.getTipo() != tip){
     if(this.hay_error == false){
         this.lista_errores_sin.push(new ErroresSintacticos(this.tokenActual.getFila() , this.tokenActual.getColumna() ,this.getTipoParaError(tip), this.tokenActual.getTipo_str() ));
-        console.log("se activo un error en la fila " + this.tokenActual.getFila() + "SE ESPERABA " + this.getTipoParaError(tip) + "en lugar de "+ this.tokenActual.getTipo_str() );
+        console.log("se activo un   ERROR en la fila " + this.tokenActual.getFila() + "SE ESPERABA " + this.getTipoParaError(tip) + "en lugar de "+ this.tokenActual.getTipo_str() );
         this.hay_error = true;
     }
     }
             
     if((this.hay_error == true && this.tokenActual.getTipo() == Tipo.punto_y_coma && tip == Tipo.punto_y_coma) || (this.hay_error == true && this.tokenActual.getTipo() == Tipo.llave_derecha && tip == Tipo.llave_derecha) ){// truncamiento de fin de 
         this.hay_error = false;
-        console.log("COMIENZA A ANALIZAR NORMAL a partir de la fila :  " + this.tokenActual.getFila());
+        console.log("[PAREA]SE RECUPERO a partir de la fila :  " + this.tokenActual.getFila());
     }
 
     if (this.tokenActual.getTipo() != Tipo.sharp) // AGREGAR EL SHARP 
@@ -1067,7 +1096,11 @@ export class An_sintatico{
          
         if(this.hay_error){
             // CUANDO DEJO DE CAMBIAR DE TOKENS , debo desechar hasta llegar a punto y coma o llave de cierre
-            if(this.tokenActual.getTipo() != Tipo.punto_y_coma && this.tokenActual.getTipo() != Tipo.llave_derecha ){
+            if(
+               this.tokenActual.getTipo() != Tipo.punto_y_coma &&
+               this.tokenActual.getTipo() != Tipo.llave_derecha &&
+               this.tokenActual.getTipo() != Tipo.sharp
+               ){
             this.sig++;
             this.tokenActual = this.listaTok[this.sig];
             }   
@@ -1079,6 +1112,9 @@ export class An_sintatico{
     
     }
 }
+
+
+
 
 private salto():void{
     // es solo para los primeros de cada instruccion 

@@ -24,8 +24,8 @@ Instruccion->  DECLARACION_ADENTRO_DE_METODOS_FUNCIONES             // YA
  			  |SentenciaSwitch_case
  			  |asignacionSimple			  // YA 
 			  |Sentencia_do_while		  // YA
-			  |sentencia_llama_metodo     //ya, se topa con asignacionSimple // YA 
-			  |opcionMetodoFuncion     //ya,  se topa Declaracion 
+			  |sentencia_llama_metodo     //NO SE PROGRAMAN YA INCLUIDAS EN PRODUCCION  asignacionSimple 
+			  |opcionMetodoFuncion     //NO SE PROGRAMAN YA INCLUIDAS EN PRODUCCION  topa Declaracion 
 			  |epsilon
 				// solo puede ser usadas en ciertos casos  seran Instruccion pero que tendran una condicion bool 
 			  |Sentencia_return_funciones

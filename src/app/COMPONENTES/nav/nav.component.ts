@@ -2,7 +2,6 @@ import { Component, OnInit ,HostBinding} from '@angular/core';
 import { Estatico} from '../../MODELS/Estatico';// lo importo
 import { Entrada } from 'src/app/MODELS/Entrada';
 import {Token ,Tipo} from '../../MODELS/Token';
-import { variable, IfStmt } from '@angular/compiler/src/output/output_ast';
 import {An_lexico} from '../../MODELS/An_lexico';
 import{Router} from '@angular/router';
 import {ErrorLexico} from '../../MODELS/ErrorLexico';
@@ -193,22 +192,31 @@ export class NavComponent implements OnInit {
   }
   
   GUARDA_ARCHIVO(){
-    let cadena__py:any = this.cadena_traducir.cadena;
-    let cadena__html:any = this.cadena_html.cadena; 
-    let cadena__json:any = this.cadena_json.cadena;
-    let data_py = new Blob([cadena__py], { type: "text/csv;charset=utf-8" });
-    let data_html = new Blob([cadena__html],{ type: "text/csv;charset=utf-8" });
-    let data_json = new Blob([cadena__json], { type: "text/csv;charset=utf-8" });
-    saveAs(data_py, "TRADUCCION.py");
-    saveAs(data_html, "CODIGO_HTML.html");
-    saveAs(data_json, "CODIGO_JSON.json");
-    alert("GENERANDO REPORTES...");
+    try{
+      let cadena__py:any = this.cadena_traducir.cadena;
+      let cadena__html:any = this.cadena_html.cadena; 
+      let cadena__json:any = this.cadena_json.cadena;
+      let data_py = new Blob([cadena__py], { type: "text/csv;charset=utf-8" });
+      let data_html = new Blob([cadena__html],{ type: "text/csv;charset=utf-8" });
+      let data_json = new Blob([cadena__json], { type: "text/csv;charset=utf-8" });
+      saveAs(data_py, "TRADUCCION.py");
+      saveAs(data_html, "CODIGO_HTML.html");
+      saveAs(data_json, "CODIGO_JSON.json");
+      alert("GENERANDO REPORTES...");
+    }catch(e){
+      alert("algo salio mal..");
+    }
+    
   }
 
   SA_VE(){
+    try{ 
     let c_sharp_entrada = new Blob([this.filestring], { type: "text/csv;charset=utf-8" });
     saveAs(c_sharp_entrada, "Entrada_.cs");
     alert("Entrada guardada correctamente");
+  }catch(e){
+    alert("algo salio mal..");
+  }
   }
 
 fileChanged(e) {
